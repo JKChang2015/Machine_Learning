@@ -16,8 +16,6 @@ women_degrees = pd.read_csv('percent-bachelors-degrees-women-usa.csv')
 major_cats = list(women_degrees)
 major_cats.remove('Year')
 
-
-
 fig = plt.figure(figsize=(10, 35))
 
 for sp in range(len(major_cats)):
