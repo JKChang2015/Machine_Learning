@@ -345,6 +345,326 @@ of sample indices for which the split test is false, respectively. Each
 of the above summands are indeed variance estimates, though, written in
 a form without directly referring to the mean.
 
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{datasets}\PY{n+nn}{.}\PY{n+nn}{california\PYZus{}housing} \PY{k}{import} \PY{n}{fetch\PYZus{}california\PYZus{}housing}
+        \PY{n}{housing} \PY{o}{=} \PY{n}{fetch\PYZus{}california\PYZus{}housing}\PY{p}{(}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{housing}\PY{o}{.}\PY{n}{DESCR}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+California housing dataset.
+
+The original database is available from StatLib
+
+    http://lib.stat.cmu.edu/datasets/
+
+The data contains 20,640 observations on 9 variables.
+
+This dataset contains the average house value as target variable
+and the following input variables (features): average income,
+housing average age, average rooms, average bedrooms, population,
+average occupation, latitude, and longitude in that order.
+
+References
+----------
+
+Pace, R. Kelley and Ronald Barry, Sparse Spatial Autoregressions,
+Statistics and Probability Letters, 33 (1997) 291-297.
+
+
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{data}\PY{o}{.}\PY{n}{shape}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:} (20640, 8)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{housing}\PY{o}{.}\PY{n}{data}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}14}]:} array([   8.3252    ,   41.        ,    6.98412698,    1.02380952,
+                 322.        ,    2.55555556,   37.88      , -122.23      ])
+\end{Verbatim}
+            
+    \hypertarget{class-sklearn.tree.decisiontreeregressorcriterionmse-splitterbest-max_depthnone-min_samples_split2-min_samples_leaf1-min_weight_fraction_leaf0.0-max_featuresnone-random_statenone-max_leaf_nodesnone-min_impurity_decrease0.0-min_impurity_splitnone-presortfalse}{%
+\subsubsection{\texorpdfstring{class
+sklearn.tree.DecisionTreeRegressor(criterion='mse', splitter='best',
+max\_depth=None, min\_samples\_split=2, min\_samples\_leaf=1,
+min\_weight\_fraction\_leaf=0.0, max\_features=None, random\_state=None,
+max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+min\_impurity\_split=None, presort=False)
+}{class sklearn.tree.DecisionTreeRegressor(criterion='mse', splitter='best', max\_depth=None, min\_samples\_split=2, min\_samples\_leaf=1, min\_weight\_fraction\_leaf=0.0, max\_features=None, random\_state=None, max\_leaf\_nodes=None, min\_impurity\_decrease=0.0, min\_impurity\_split=None, presort=False)  }}\label{class-sklearn.tree.decisiontreeregressorcriterionmse-splitterbest-max_depthnone-min_samples_split2-min_samples_leaf1-min_weight_fraction_leaf0.0-max_featuresnone-random_statenone-max_leaf_nodesnone-min_impurity_decrease0.0-min_impurity_splitnone-presortfalse}}
+
+\begin{itemize}
+\tightlist
+\item
+  criterion : string, optional (default=''mse'') The function to measure
+  the quality of a split. Supported criteria are ``mse'' for the mean
+  squared error, which is equal to variance reduction as feature
+  selection criterion and minimizes the L2 loss using the mean of each
+  terminal node, ``friedman\_mse'', which uses mean squared error with
+  Friedman's improvement score for potential splits, and ``mae'' for the
+  mean absolute error, which minimizes the L1 loss using the median of
+  each terminal node. 
+\item
+  splitter : string, optional (default=''best'') The strategy used to
+  choose the split at each node. Supported strategies are ``best'' to
+  choose the best split and ``random'' to choose the best random split. 
+\item
+  \texttt{max\_depth} : int or None, optional (default=None) The maximum
+  depth of the tree. If None, then nodes are expanded until all leaves
+  are pure or until all leaves contain less than min\_samples\_split
+  samples. 
+\item
+  \texttt{min\_samples\_split} : int, float, optional (default=2) The
+  minimum number of samples required to split an internal node:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If int, then consider min\_samples\_split as the minimum number.
+  \item
+    If float, then min\_samples\_split is a percentage and
+    ceil(min\_samples\_split * n\_samples) are the minimum number of
+    samples for each split. Changed in version 0.18: Added float values
+    for percentages. 
+  \end{itemize}
+\item
+  \texttt{min\_samples\_leaf} : int, float, optional (default=1) The
+  minimum number of samples required to be at a leaf node:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If int, then consider min\_samples\_leaf as the minimum number.
+  \item
+    If float, then min\_samples\_leaf is a percentage and
+    ceil(min\_samples\_leaf * n\_samples) are the minimum number of
+    samples for each node. Changed in version 0.18: Added float values
+    for percentages. 
+  \end{itemize}
+\item
+  min\_weight\_fraction\_leaf : float, optional (default=0.) The minimum
+  weighted fraction of the sum total of weights (of all the input
+  samples) required to be at a leaf node. Samples have equal weight when
+  sample\_weight is not provided. 
+\item
+  max\_features : int, float, string or None, optional (default=None)
+  The number of features to consider when looking for the best split:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If int, then consider max\_features features at each split.
+  \item
+    If float, then max\_features is a percentage and int(max\_features *
+    n\_features) features are considered at each split.
+  \item
+    If ``auto'', then max\_features=n\_features.
+  \item
+    If ``sqrt'', then max\_features=sqrt(n\_features).
+  \item
+    If ``log2'', then max\_features=log2(n\_features).
+  \item
+    If None, then max\_features=n\_features. Note: the search for a
+    split does not stop until at least one valid partition of the node
+    samples is found, even if it requires to effectively inspect more
+    than max\_features features. 
+  \end{itemize}
+\item
+  random\_state : int, RandomState instance or None, optional
+  (default=None) If int, random\_state is the seed used by the random
+  number generator; If RandomState instance, random\_state is the random
+  number generator; If None, the random number generator is the
+  RandomState instance used by np.random. 
+\item
+  max\_leaf\_nodes : int or None, optional (default=None) Grow a tree
+  with max\_leaf\_nodes in best-first fashion. Best nodes are defined as
+  relative reduction in impurity. If None then unlimited number of leaf
+  nodes. 
+\item
+  min\_impurity\_decrease : float, optional (default=0.) A node will be
+  split if this split induces a decrease of the impurity greater than or
+  equal to this value. The weighted impurity decrease equation is the
+  following:
+  \texttt{N\_t\ /\ N\ *\ (impurity\ -\ N\_t\_R\ /\ N\_t\ *\ right\_impurity\ -\ N\_t\_L\ /\ N\_t\ *\ left\_impurity)}
+  where N is the total number of samples, N\_t is the number of samples
+  at the current node, N\_t\_L is the number of samples in the left
+  child, and N\_t\_R is the number of samples in the right child. N,
+  N\_t, N\_t\_R and N\_t\_L all refer to the weighted sum, if
+  sample\_weight is passed. New in version 0.19. 
+\item
+  min\_impurity\_split : float, Threshold for early stopping in tree
+  growth. A node will split if its impurity is above the threshold,
+  otherwise it is a leaf. 
+\item
+  presort : bool, optional (default=False) Whether to presort the data
+  to speed up the finding of best splits in fitting. For the default
+  settings of a decision tree on large datasets, setting this to true
+  may slow down the training process. When using either a smaller
+  dataset or a restricted depth, this may speed up the training.
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn} \PY{k}{import} \PY{n}{tree}
+         \PY{n}{dtr} \PY{o}{=} \PY{n}{tree}\PY{o}{.}\PY{n}{DecisionTreeRegressor}\PY{p}{(}\PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}  \PY{c+c1}{\PYZsh{}create a tree}
+         \PY{n}{dtr}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{housing}\PY{o}{.}\PY{n}{data}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{housing}\PY{o}{.}\PY{n}{target}\PY{p}{)} \PY{c+c1}{\PYZsh{}construct a tree model pattern 6 and 7}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} DecisionTreeRegressor(criterion='mse', max\_depth=2, max\_features=None,
+                    max\_leaf\_nodes=None, min\_impurity\_decrease=0.0,
+                    min\_impurity\_split=None, min\_samples\_leaf=1,
+                    min\_samples\_split=2, min\_weight\_fraction\_leaf=0.0,
+                    presort=False, random\_state=None, splitter='best')
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{c+c1}{\PYZsh{} visualization}
+         \PY{n}{dot\PYZus{}data} \PY{o}{=} \PY{n}{tree}\PY{o}{.}\PY{n}{export\PYZus{}graphviz}\PY{p}{(}
+             \PY{n}{dtr}\PY{p}{,} \PY{c+c1}{\PYZsh{} data}
+             \PY{n}{out\PYZus{}file}\PY{o}{=}\PY{k+kc}{None}\PY{p}{,}
+             \PY{n}{feature\PYZus{}names}\PY{o}{=}\PY{n}{housing}\PY{o}{.}\PY{n}{feature\PYZus{}names}\PY{p}{[}\PY{l+m+mi}{6}\PY{p}{:}\PY{l+m+mi}{8}\PY{p}{]}\PY{p}{,} \PY{c+c1}{\PYZsh{}pattern name}
+             \PY{n}{filled}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+             \PY{n}{impurity}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+             \PY{n}{rounded}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{k+kn}{import} \PY{n+nn}{pydotplus}
+         \PY{n}{graph} \PY{o}{=} \PY{n}{pydotplus}\PY{o}{.}\PY{n}{graph\PYZus{}from\PYZus{}dot\PYZus{}data}\PY{p}{(}\PY{n}{dot\PYZus{}data}\PY{p}{)}
+         \PY{n}{graph}\PY{o}{.}\PY{n}{get\PYZus{}nodes}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{7}\PY{p}{]}\PY{o}{.}\PY{n}{set\PYZus{}fillcolor}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}FFF2DD}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{k+kn}{from} \PY{n+nn}{IPython}\PY{n+nn}{.}\PY{n+nn}{display} \PY{k}{import} \PY{n}{Image}
+         \PY{n}{Image}\PY{p}{(}\PY{n}{graph}\PY{o}{.}\PY{n}{create\PYZus{}png}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+\texttt{\color{outcolor}Out[{\color{outcolor}18}]:}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{graph}\PY{o}{.}\PY{n}{write\PYZus{}png}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dtr\PYZus{}white\PYZus{}background.png}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:} True
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+         \PY{c+c1}{\PYZsh{} split the dataset to train and test}
+         \PY{n}{data\PYZus{}train}\PY{p}{,} \PY{n}{data\PYZus{}test}\PY{p}{,} \PY{n}{target\PYZus{}train}\PY{p}{,} \PY{n}{target\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+             \PY{n}{housing}\PY{o}{.}\PY{n}{data}\PY{p}{,} \PY{n}{housing}\PY{o}{.}\PY{n}{target}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)} \PY{c+c1}{\PYZsh{}random seed 42}
+         \PY{n}{dtr} \PY{o}{=} \PY{n}{tree}\PY{o}{.}\PY{n}{DecisionTreeRegressor}\PY{p}{(}\PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)} \PY{c+c1}{\PYZsh{}random seed 42}
+         \PY{n}{dtr}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{data\PYZus{}train}\PY{p}{,} \PY{n}{target\PYZus{}train}\PY{p}{)} \PY{c+c1}{\PYZsh{} training }
+         \PY{n}{dtr}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{data\PYZus{}test}\PY{p}{,} \PY{n}{target\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}21}]:} 0.637318351331017
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{c+c1}{\PYZsh{} traverse the parameters: dict format}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{grid\PYZus{}search} \PY{k}{import} \PY{n}{GridSearchCV}
+         \PY{n}{tree\PYZus{}param\PYZus{}grid} \PY{o}{=} \PY{p}{\PYZob{}} 
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{min\PYZus{}samples\PYZus{}split}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n+nb}{list}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{c+c1}{\PYZsh{} 3 values for min samples split}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}estimators}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n+nb}{list}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} 3 values for n\PYZus{}estimator}
+         \PY{p}{\PYZcb{}}
+         
+         \PY{c+c1}{\PYZsh{} cross validation cv =5}
+         \PY{n}{grid} \PY{o}{=} \PY{n}{GridSearchCV}\PY{p}{(}\PY{n}{RandomForestRegressor}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{param\PYZus{}grid}\PY{o}{=}\PY{n}{tree\PYZus{}param\PYZus{}grid}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}
+         \PY{n}{grid}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{data\PYZus{}train}\PY{p}{,} \PY{n}{target\PYZus{}train}\PY{p}{)}
+         \PY{n}{grid}\PY{o}{.}\PY{n}{grid\PYZus{}scores\PYZus{}}\PY{p}{,} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}params\PYZus{}}\PY{p}{,} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}score\PYZus{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/sklearn/cross\_validation.py:41: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model\_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+  "This module will be removed in 0.20.", DeprecationWarning)
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/sklearn/grid\_search.py:42: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model\_selection module into which all the refactored classes and functions are moved. This module will be removed in 0.20.
+  DeprecationWarning)
+
+    \end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}23}]:} ([mean: 0.78503, std: 0.00396, params: \{'min\_samples\_split': 3, 'n\_estimators': 10\},
+           mean: 0.80482, std: 0.00404, params: \{'min\_samples\_split': 3, 'n\_estimators': 50\},
+           mean: 0.80685, std: 0.00420, params: \{'min\_samples\_split': 3, 'n\_estimators': 100\},
+           mean: 0.78834, std: 0.00598, params: \{'min\_samples\_split': 6, 'n\_estimators': 10\},
+           mean: 0.80585, std: 0.00479, params: \{'min\_samples\_split': 6, 'n\_estimators': 50\},
+           mean: 0.80643, std: 0.00437, params: \{'min\_samples\_split': 6, 'n\_estimators': 100\},
+           mean: 0.79111, std: 0.00703, params: \{'min\_samples\_split': 9, 'n\_estimators': 10\},
+           mean: 0.80348, std: 0.00511, params: \{'min\_samples\_split': 9, 'n\_estimators': 50\},
+           mean: 0.80533, std: 0.00423, params: \{'min\_samples\_split': 9, 'n\_estimators': 100\}],
+          \{'min\_samples\_split': 3, 'n\_estimators': 100\},
+          0.8068548110279)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestRegressor}
+         \PY{n}{rfr} \PY{o}{=} \PY{n}{RandomForestRegressor}\PY{p}{(} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{42}\PY{p}{)}
+         \PY{n}{rfr}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{data\PYZus{}train}\PY{p}{,} \PY{n}{target\PYZus{}train}\PY{p}{)}
+         \PY{n}{rfr}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{data\PYZus{}test}\PY{p}{,} \PY{n}{target\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:} 0.7908649228096493
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{rfr} \PY{o}{=} \PY{n}{RandomForestRegressor}\PY{p}{(} \PY{n}{min\PYZus{}samples\PYZus{}split}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n\PYZus{}estimators} \PY{o}{=} \PY{l+m+mi}{100}\PY{p}{,}\PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{42}\PY{p}{)}
+         \PY{n}{rfr}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{data\PYZus{}train}\PY{p}{,} \PY{n}{target\PYZus{}train}\PY{p}{)}
+         \PY{n}{rfr}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{data\PYZus{}test}\PY{p}{,} \PY{n}{target\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}25}]:} 0.8090829049653158
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{rfr}\PY{o}{.}\PY{n}{feature\PYZus{}importances\PYZus{}}\PY{p}{,} \PY{n}{index} \PY{o}{=} \PY{n}{housing}\PY{o}{.}\PY{n}{feature\PYZus{}names}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{ascending} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}26}]:} MedInc        0.524257
+         AveOccup      0.137947
+         Latitude      0.090622
+         Longitude     0.089414
+         HouseAge      0.053970
+         AveRooms      0.044443
+         Population    0.030263
+         AveBedrms     0.029084
+         dtype: float64
+\end{Verbatim}
+            
 
     % Add a bibliography block to the postdoc
     
