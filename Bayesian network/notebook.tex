@@ -1,0 +1,1461 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Bayes' theorem}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \subsubsection{Bayes' theorem}\label{bayes-theorem}
+
+In probability theory and statistics, Bayes' theorem (alternatively
+Bayes' law or Bayes' rule, also written as Bayes's theorem) describes
+the probability of an event, based on prior knowledge of conditions that
+might be related to the event.
+
+Bayes' theorem is stated mathematically as the following equation:
+\[ P(A\mid B)={\frac {P(B\mid A)\,P(A)}{P(B)}},\]
+
+where, * P(A\textbar{}B) is a conditional probability: the likelihood of
+event A occurring given that B is true. * P(B\textbar{}A) is also a
+conditional probability: the likelihood of event B occurring given that
+A is true. * P(A) and P(B) are the probabilities of observing A and B
+independently of each other; this is known as the marginal probability.
+
+\[P(A|B) \propto P(B|A)P(A)\]
+
+    \begin{itemize}
+\tightlist
+\item
+  正向概率：假设袋子里有N个白球，M个黑球，伸手摸球，摸到黑球的概率有多大
+\item
+  逆向概率：事先不知道袋子里的黑白球比例。观察取出的球(结果)的颜色，对袋子里的黑白比率做出推测
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{c+c1}{\PYZsh{} Spelling Correction}
+        \PY{c+c1}{\PYZsh{} P(A): the probability that the result A occuring}
+        \PY{c+c1}{\PYZsh{} P(B|A): the probability that the result A can affect input B}
+        
+        \PY{k+kn}{import} \PY{n+nn}{re}\PY{o}{,} \PY{n+nn}{collections}
+        
+        
+        \PY{k}{def} \PY{n+nf}{words}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{n}{re}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[a\PYZhy{}z]+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+        
+        
+        \PY{k}{def} \PY{n+nf}{train}\PY{p}{(}\PY{n}{features}\PY{p}{)}\PY{p}{:}
+            \PY{n}{model} \PY{o}{=} \PY{n}{collections}\PY{o}{.}\PY{n}{defaultdict}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{)}
+            \PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{n}{features}\PY{p}{:}
+                \PY{n}{model}\PY{p}{[}\PY{n}{f}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            \PY{k}{return} \PY{n}{model}
+        
+        
+        \PY{n}{NWORDS} \PY{o}{=} \PY{n}{train}\PY{p}{(}\PY{n}{words}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{big.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+        
+        \PY{n}{alphabet} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{abcdefghijklmnopqrstuvwxyz}\PY{l+s+s1}{\PYZsq{}}
+        
+        
+        \PY{k}{def} \PY{n+nf}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{word}\PY{p}{)}
+            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}
+                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} deletion}
+                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} transposition}
+                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{c} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} alteration}
+                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{c} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]}\PY{p}{)}  \PY{c+c1}{\PYZsh{} insertion}
+        
+        
+        \PY{k}{def} \PY{n+nf}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{e2} \PY{k}{for} \PY{n}{e1} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{k}{for} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{e1}\PY{p}{)} \PY{k}{if} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
+        
+        
+        \PY{k}{def} \PY{n+nf}{known}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{w} \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n}{words} \PY{k}{if} \PY{n}{w} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
+        
+        
+        \PY{k}{def} \PY{n+nf}{correct}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{n}{candidates} \PY{o}{=} \PY{n}{known}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{]}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known}\PY{p}{(}
+                \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{o+ow}{or} \PY{p}{[}\PY{n}{word}\PY{p}{]}
+            \PY{k}{return} \PY{n+nb}{max}\PY{p}{(}\PY{n}{candidates}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{w}\PY{p}{:} \PY{n}{NWORDS}\PY{p}{[}\PY{n}{w}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{correct}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{knon}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}2}]:} 'know'
+\end{Verbatim}
+            
+    \subsubsection{求解：argmaxc P(c\textbar{}w) -\textgreater{} argmaxc
+P(w\textbar{}c) P(c) /
+P(w)}\label{ux6c42ux89e3argmaxc-pcw---argmaxc-pwc-pc-pw}
+
+\begin{itemize}
+\tightlist
+\item
+  P(c), 文章中出现一个正确拼写词 c 的概率, 也就是说, 在英语文章中, c
+  出现的概率有多大
+\item
+  P(w\textbar{}c), 在用户想键入 c 的情况下敲成 w 的概率.
+  因为这个是代表用户会以多大的概率把 c 敲错成 w
+\item
+  argmaxc, 用来枚举所有可能的 c 并且选取概率最大的
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} 把语料中的单词全部抽取出来, 转成小写, 并且去除单词中间的特殊符号}
+        \PY{k}{def} \PY{n+nf}{words}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{re}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[a\PYZhy{}z]+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)} 
+         
+        \PY{k}{def} \PY{n+nf}{train}\PY{p}{(}\PY{n}{features}\PY{p}{)}\PY{p}{:}
+            \PY{n}{model} \PY{o}{=} \PY{n}{collections}\PY{o}{.}\PY{n}{defaultdict}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{)}
+            \PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{n}{features}\PY{p}{:}
+                \PY{n}{model}\PY{p}{[}\PY{n}{f}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+            \PY{k}{return} \PY{n}{model}
+         
+        \PY{n}{NWORDS} \PY{o}{=} \PY{n}{train}\PY{p}{(}\PY{n}{words}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{big.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    要是遇到我们从来没有过见过的新词怎么办. 假如说一个词拼写完全正确,
+但是语料库中没有包含这个词, 从而这个词也永远不会出现在训练集中. 于是,
+我们就要返回出现这个词的概率是0. 这个情况不太妙,
+因为概率为0这个代表了这个事件绝对不可能发生, 而在我们的概率模型中,
+我们期望用一个很小的概率来代表这种情况. lambda: 1
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{NWORDS}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}4}]:} defaultdict(<function \_\_main\_\_.train.<locals>.<lambda>()>,
+                    \{'the': 80031,
+                     'project': 289,
+                     'gutenberg': 264,
+                     'ebook': 88,
+                     'of': 40026,
+                     'adventures': 18,
+                     'sherlock': 102,
+                     'holmes': 468,
+                     'by': 6739,
+                     'sir': 178,
+                     'arthur': 35,
+                     'conan': 5,
+                     'doyle': 6,
+                     'in': 22048,
+                     'our': 1067,
+                     'series': 129,
+                     'copyright': 70,
+                     'laws': 234,
+                     'are': 3631,
+                     'changing': 45,
+                     'all': 4145,
+                     'over': 1283,
+                     'world': 363,
+                     'be': 6156,
+                     'sure': 124,
+                     'to': 28767,
+                     'check': 39,
+                     'for': 6940,
+                     'your': 1280,
+                     'country': 424,
+                     'before': 1364,
+                     'downloading': 6,
+                     'or': 5353,
+                     'redistributing': 8,
+                     'this': 4064,
+                     'any': 1205,
+                     'other': 1503,
+                     'header': 8,
+                     'should': 1298,
+                     'first': 1178,
+                     'thing': 304,
+                     'seen': 445,
+                     'when': 2924,
+                     'viewing': 8,
+                     'file': 22,
+                     'please': 173,
+                     'do': 1504,
+                     'not': 6626,
+                     'remove': 54,
+                     'it': 10682,
+                     'change': 151,
+                     'edit': 5,
+                     'without': 1016,
+                     'written': 118,
+                     'permission': 53,
+                     'read': 219,
+                     'legal': 53,
+                     'small': 528,
+                     'print': 48,
+                     'and': 38313,
+                     'information': 74,
+                     'about': 1498,
+                     'at': 6792,
+                     'bottom': 43,
+                     'included': 44,
+                     'is': 9775,
+                     'important': 286,
+                     'specific': 38,
+                     'rights': 169,
+                     'restrictions': 24,
+                     'how': 1316,
+                     'may': 2552,
+                     'used': 277,
+                     'you': 5623,
+                     'can': 1096,
+                     'also': 779,
+                     'find': 295,
+                     'out': 1988,
+                     'make': 505,
+                     'a': 21156,
+                     'donation': 11,
+                     'get': 469,
+                     'involved': 108,
+                     'welcome': 19,
+                     'free': 422,
+                     'plain': 109,
+                     'vanilla': 7,
+                     'electronic': 59,
+                     'texts': 8,
+                     'ebooks': 55,
+                     'readable': 14,
+                     'both': 530,
+                     'humans': 3,
+                     'computers': 8,
+                     'since': 261,
+                     'these': 1232,
+                     'were': 4290,
+                     'prepared': 139,
+                     'thousands': 94,
+                     'volunteers': 23,
+                     'title': 40,
+                     'author': 30,
+                     'release': 29,
+                     'date': 49,
+                     'march': 136,
+                     'most': 909,
+                     'recently': 31,
+                     'updated': 5,
+                     'november': 42,
+                     'edition': 22,
+                     'language': 62,
+                     'english': 212,
+                     'character': 175,
+                     'set': 325,
+                     'encoding': 6,
+                     'ascii': 12,
+                     'start': 68,
+                     'additional': 31,
+                     'editing': 7,
+                     'jose': 2,
+                     'menendez': 2,
+                     'contents': 51,
+                     'i': 7683,
+                     'scandal': 20,
+                     'bohemia': 16,
+                     'ii': 78,
+                     'red': 289,
+                     'headed': 38,
+                     'league': 54,
+                     'iii': 92,
+                     'case': 439,
+                     'identity': 12,
+                     'iv': 56,
+                     'boscombe': 17,
+                     'valley': 79,
+                     'mystery': 40,
+                     'v': 52,
+                     'five': 280,
+                     'orange': 24,
+                     'pips': 13,
+                     'vi': 38,
+                     'man': 1653,
+                     'with': 9741,
+                     'twisted': 22,
+                     'lip': 57,
+                     'vii': 35,
+                     'adventure': 35,
+                     'blue': 144,
+                     'carbuncle': 18,
+                     'viii': 40,
+                     'speckled': 6,
+                     'band': 55,
+                     'ix': 29,
+                     'engineer': 13,
+                     's': 5632,
+                     'thumb': 52,
+                     'x': 137,
+                     'noble': 49,
+                     'bachelor': 19,
+                     'xi': 29,
+                     'beryl': 5,
+                     'coronet': 30,
+                     'xii': 29,
+                     'copper': 27,
+                     'beeches': 13,
+                     'she': 3947,
+                     'always': 609,
+                     'woman': 326,
+                     'have': 3494,
+                     'seldom': 77,
+                     'heard': 637,
+                     'him': 5231,
+                     'mention': 47,
+                     'her': 5285,
+                     'under': 964,
+                     'name': 263,
+                     'his': 10035,
+                     'eyes': 940,
+                     'eclipses': 3,
+                     'predominates': 4,
+                     'whole': 745,
+                     'sex': 12,
+                     'was': 11411,
+                     'that': 12513,
+                     'he': 12402,
+                     'felt': 698,
+                     'emotion': 37,
+                     'akin': 15,
+                     'love': 485,
+                     'irene': 19,
+                     'adler': 17,
+                     'emotions': 11,
+                     'one': 3372,
+                     'particularly': 175,
+                     'abhorrent': 2,
+                     'cold': 258,
+                     'precise': 14,
+                     'but': 5654,
+                     'admirably': 8,
+                     'balanced': 7,
+                     'mind': 342,
+                     'take': 617,
+                     'perfect': 40,
+                     'reasoning': 42,
+                     'observing': 22,
+                     'machine': 40,
+                     'has': 1604,
+                     'as': 8065,
+                     'lover': 27,
+                     'would': 1954,
+                     'placed': 183,
+                     'himself': 1159,
+                     'false': 65,
+                     'position': 433,
+                     'never': 594,
+                     'spoke': 219,
+                     'softer': 11,
+                     'passions': 30,
+                     'save': 111,
+                     'gibe': 3,
+                     'sneer': 7,
+                     'they': 3939,
+                     'admirable': 15,
+                     'things': 322,
+                     'observer': 14,
+                     'excellent': 63,
+                     'drawing': 241,
+                     'veil': 17,
+                     'from': 5710,
+                     'men': 1146,
+                     'motives': 15,
+                     'actions': 78,
+                     'trained': 24,
+                     'reasoner': 7,
+                     'admit': 66,
+                     'such': 1437,
+                     'intrusions': 2,
+                     'into': 2125,
+                     'own': 786,
+                     'delicate': 55,
+                     'finely': 12,
+                     'adjusted': 17,
+                     'temperament': 6,
+                     'introduce': 24,
+                     'distracting': 2,
+                     'factor': 42,
+                     'which': 4843,
+                     'might': 537,
+                     'throw': 49,
+                     'doubt': 153,
+                     'upon': 1112,
+                     'mental': 38,
+                     'results': 230,
+                     'grit': 2,
+                     'sensitive': 36,
+                     'instrument': 36,
+                     'crack': 21,
+                     'high': 291,
+                     'power': 549,
+                     'lenses': 2,
+                     'more': 1998,
+                     'disturbing': 10,
+                     'than': 1207,
+                     'strong': 169,
+                     'nature': 171,
+                     'yet': 489,
+                     'there': 2973,
+                     'late': 166,
+                     'dubious': 2,
+                     'questionable': 4,
+                     'memory': 56,
+                     'had': 7384,
+                     'little': 1002,
+                     'lately': 23,
+                     'my': 2250,
+                     'marriage': 97,
+                     'drifted': 6,
+                     'us': 685,
+                     'away': 839,
+                     'each': 412,
+                     'complete': 146,
+                     'happiness': 144,
+                     'home': 296,
+                     'centred': 3,
+                     'interests': 119,
+                     'rise': 241,
+                     'up': 2285,
+                     'around': 272,
+                     'who': 3051,
+                     'finds': 24,
+                     'master': 142,
+                     'establishment': 41,
+                     'sufficient': 76,
+                     'absorb': 5,
+                     'attention': 192,
+                     'while': 769,
+                     'loathed': 2,
+                     'every': 651,
+                     'form': 508,
+                     'society': 170,
+                     'bohemian': 9,
+                     'soul': 169,
+                     'remained': 232,
+                     'lodgings': 12,
+                     'baker': 50,
+                     'street': 181,
+                     'buried': 22,
+                     'among': 452,
+                     'old': 1181,
+                     'books': 60,
+                     'alternating': 3,
+                     'week': 96,
+                     'between': 655,
+                     'cocaine': 5,
+                     'ambition': 14,
+                     'drowsiness': 5,
+                     'drug': 22,
+                     'fierce': 13,
+                     'energy': 46,
+                     'keen': 33,
+                     'still': 923,
+                     'ever': 275,
+                     'deeply': 78,
+                     'attracted': 37,
+                     'study': 145,
+                     'crime': 62,
+                     'occupied': 117,
+                     'immense': 78,
+                     'faculties': 9,
+                     'extraordinary': 75,
+                     'powers': 150,
+                     'observation': 40,
+                     'following': 209,
+                     'those': 1202,
+                     'clues': 4,
+                     'clearing': 30,
+                     'mysteries': 10,
+                     'been': 2600,
+                     'abandoned': 73,
+                     'hopeless': 18,
+                     'official': 92,
+                     'police': 95,
+                     'time': 1530,
+                     'some': 1537,
+                     'vague': 40,
+                     'account': 178,
+                     'doings': 12,
+                     'summons': 12,
+                     'odessa': 4,
+                     'trepoff': 2,
+                     'murder': 31,
+                     'singular': 37,
+                     'tragedy': 10,
+                     'atkinson': 2,
+                     'brothers': 51,
+                     'trincomalee': 2,
+                     'finally': 157,
+                     'mission': 35,
+                     'accomplished': 40,
+                     'so': 3018,
+                     'delicately': 4,
+                     'successfully': 26,
+                     'reigning': 4,
+                     'family': 211,
+                     'holland': 13,
+                     'beyond': 226,
+                     'signs': 99,
+                     'activity': 132,
+                     'however': 431,
+                     'merely': 190,
+                     'shared': 26,
+                     'readers': 12,
+                     'daily': 45,
+                     'press': 82,
+                     'knew': 497,
+                     'former': 178,
+                     'friend': 284,
+                     'companion': 82,
+                     'night': 386,
+                     'on': 6644,
+                     'twentieth': 20,
+                     'returning': 69,
+                     'journey': 70,
+                     'patient': 384,
+                     'now': 1698,
+                     'returned': 195,
+                     'civil': 178,
+                     'practice': 96,
+                     'way': 860,
+                     'led': 197,
+                     'me': 1921,
+                     'through': 816,
+                     'passed': 368,
+                     'well': 1199,
+                     'remembered': 121,
+                     'door': 499,
+                     'must': 956,
+                     'associated': 197,
+                     'wooing': 3,
+                     'dark': 182,
+                     'incidents': 15,
+                     'scarlet': 23,
+                     'seized': 115,
+                     'desire': 97,
+                     'see': 1102,
+                     'again': 867,
+                     'know': 1049,
+                     'employing': 8,
+                     'rooms': 87,
+                     'brilliantly': 6,
+                     'lit': 75,
+                     'even': 947,
+                     'looked': 761,
+                     'saw': 600,
+                     'tall': 75,
+                     'spare': 28,
+                     'figure': 104,
+                     'pass': 155,
+                     'twice': 85,
+                     'silhouette': 2,
+                     'against': 661,
+                     'blind': 24,
+                     'pacing': 27,
+                     'room': 961,
+                     'swiftly': 39,
+                     'eagerly': 40,
+                     'head': 726,
+                     'sunk': 28,
+                     'chest': 82,
+                     'hands': 456,
+                     'clasped': 12,
+                     'behind': 402,
+                     'mood': 52,
+                     'habit': 56,
+                     'attitude': 73,
+                     'manner': 136,
+                     'told': 491,
+                     'their': 2956,
+                     'story': 134,
+                     'work': 383,
+                     'risen': 31,
+                     'created': 63,
+                     'dreams': 17,
+                     'hot': 120,
+                     'scent': 18,
+                     'new': 1212,
+                     'problem': 77,
+                     'rang': 30,
+                     'bell': 66,
+                     'shown': 114,
+                     'chamber': 36,
+                     'formerly': 78,
+                     'part': 705,
+                     'effusive': 3,
+                     'glad': 151,
+                     'think': 558,
+                     'hardly': 174,
+                     'word': 299,
+                     'spoken': 93,
+                     'kindly': 87,
+                     'eye': 111,
+                     'waved': 30,
+                     'an': 3424,
+                     'armchair': 50,
+                     'threw': 97,
+                     'across': 223,
+                     'cigars': 8,
+                     'indicated': 89,
+                     'spirit': 168,
+                     'gasogene': 2,
+                     'corner': 129,
+                     'then': 1559,
+                     'stood': 384,
+                     'fire': 275,
+                     'introspective': 4,
+                     'fashion': 50,
+                     'wedlock': 2,
+                     'suits': 9,
+                     'remarked': 170,
+                     'watson': 84,
+                     'put': 436,
+                     'seven': 133,
+                     'half': 319,
+                     'pounds': 27,
+                     'answered': 227,
+                     'indeed': 140,
+                     'thought': 903,
+                     'just': 768,
+                     'trifle': 12,
+                     'fancy': 51,
+                     'observe': 38,
+                     'did': 1876,
+                     'tell': 493,
+                     'intended': 59,
+                     'go': 906,
+                     'harness': 28,
+                     'deduce': 15,
+                     'getting': 93,
+                     'yourself': 163,
+                     'very': 1341,
+                     'wet': 61,
+                     'clumsy': 9,
+                     'careless': 15,
+                     'servant': 47,
+                     'girl': 167,
+                     'dear': 450,
+                     'said': 3465,
+                     'too': 549,
+                     'much': 672,
+                     'certainly': 120,
+                     'burned': 78,
+                     'lived': 114,
+                     'few': 459,
+                     'centuries': 13,
+                     'ago': 109,
+                     'true': 206,
+                     'walk': 76,
+                     'thursday': 8,
+                     'came': 980,
+                     'dreadful': 69,
+                     'mess': 11,
+                     'changed': 135,
+                     'clothes': 63,
+                     't': 1319,
+                     'imagine': 97,
+                     'mary': 706,
+                     'jane': 3,
+                     'incorrigible': 3,
+                     'wife': 368,
+                     'given': 365,
+                     'notice': 99,
+                     'fail': 41,
+                     'chuckled': 8,
+                     'rubbed': 33,
+                     'long': 992,
+                     'nervous': 55,
+                     'together': 261,
+                     'simplicity': 31,
+                     'itself': 274,
+                     'inside': 44,
+                     'left': 835,
+                     'shoe': 12,
+                     'where': 978,
+                     'firelight': 3,
+                     'strikes': 20,
+                     'leather': 36,
+                     'scored': 5,
+                     'six': 177,
+                     'almost': 326,
+                     'parallel': 18,
+                     'cuts': 6,
+                     'obviously': 39,
+                     'caused': 103,
+                     'someone': 161,
+                     'carelessly': 15,
+                     'scraped': 22,
+                     'round': 557,
+                     'edges': 71,
+                     'sole': 71,
+                     'order': 405,
+                     'crusted': 3,
+                     'mud': 37,
+                     'hence': 33,
+                     'double': 50,
+                     'deduction': 13,
+                     'vile': 17,
+                     'weather': 43,
+                     'malignant': 89,
+                     'boot': 23,
+                     'slitting': 3,
+                     'specimen': 15,
+                     'london': 77,
+                     'slavey': 2,
+                     'if': 2373,
+                     'gentleman': 100,
+                     'walks': 11,
+                     'smelling': 6,
+                     'iodoform': 44,
+                     'black': 236,
+                     'mark': 39,
+                     'nitrate': 8,
+                     'silver': 129,
+                     'right': 711,
+                     'forefinger': 8,
+                     'bulge': 3,
+                     'side': 512,
+                     'top': 43,
+                     'hat': 106,
+                     'show': 214,
+                     'secreted': 3,
+                     'stethoscope': 3,
+                     'dull': 75,
+                     'pronounce': 10,
+                     'active': 97,
+                     'member': 51,
+                     'medical': 23,
+                     'profession': 23,
+                     'could': 1701,
+                     'help': 231,
+                     'laughing': 116,
+                     'ease': 45,
+                     'explained': 61,
+                     'process': 220,
+                     'hear': 184,
+                     'give': 524,
+                     'reasons': 65,
+                     'appears': 109,
+                     'ridiculously': 2,
+                     'simple': 140,
+                     'easily': 115,
+                     'myself': 228,
+                     'though': 651,
+                     'successive': 18,
+                     'instance': 51,
+                     'am': 747,
+                     'baffled': 9,
+                     'until': 326,
+                     'explain': 124,
+                     'believe': 184,
+                     'good': 745,
+                     'yours': 47,
+                     'quite': 503,
+                     'lighting': 17,
+                     'cigarette': 7,
+                     'throwing': 47,
+                     'down': 1129,
+                     'distinction': 20,
+                     'clear': 234,
+                     'example': 287,
+                     'frequently': 219,
+                     'steps': 189,
+                     'lead': 138,
+                     'hall': 84,
+                     'often': 444,
+                     'hundreds': 49,
+                     'times': 237,
+                     'many': 610,
+                     'don': 582,
+                     'observed': 132,
+                     'point': 224,
+                     'seventeen': 11,
+                     'because': 631,
+                     'interested': 66,
+                     'problems': 79,
+                     'enough': 176,
+                     'chronicle': 8,
+                     'two': 1139,
+                     'trifling': 13,
+                     'experiences': 12,
+                     'sheet': 30,
+                     'thick': 78,
+                     'pink': 28,
+                     'tinted': 10,
+                     'notepaper': 3,
+                     'lying': 119,
+                     'open': 326,
+                     'table': 297,
+                     'last': 566,
+                     'post': 118,
+                     'aloud': 29,
+                     'note': 116,
+                     'undated': 2,
+                     'either': 294,
+                     'signature': 10,
+                     'address': 77,
+                     'will': 1578,
+                     'call': 198,
+                     'quarter': 47,
+                     'eight': 129,
+                     'o': 258,
+                     'clock': 121,
+                     'desires': 23,
+                     'consult': 20,
+                     'matter': 366,
+                     'deepest': 16,
+                     'moment': 488,
+                     'recent': 55,
+                     'services': 39,
+                     'royal': 112,
+                     'houses': 118,
+                     'europe': 154,
+                     'safely': 12,
+                     'trusted': 17,
+                     'matters': 137,
+                     'importance': 118,
+                     'exaggerated': 29,
+                     'we': 1907,
+                     'quarters': 73,
+                     'received': 281,
+                     'hour': 158,
+                     'amiss': 7,
+                     'visitor': 75,
+                     'wear': 31,
+                     'mask': 13,
+                     'what': 3012,
+                     'means': 254,
+                     'no': 2349,
+                     'data': 18,
+                     'capital': 145,
+                     'mistake': 40,
+                     'theorise': 2,
+                     'insensibly': 3,
+                     'begins': 48,
+                     'twist': 15,
+                     'facts': 73,
+                     'suit': 26,
+                     'theories': 22,
+                     'instead': 138,
+                     'carefully': 73,
+                     'examined': 50,
+                     'writing': 70,
+                     'paper': 178,
+                     'wrote': 150,
+                     'presumably': 9,
+                     'endeavouring': 9,
+                     'imitate': 8,
+                     'processes': 36,
+                     'bought': 56,
+                     'crown': 62,
+                     'packet': 12,
+                     'peculiarly': 15,
+                     'stiff': 21,
+                     'peculiar': 85,
+                     'hold': 115,
+                     'light': 279,
+                     'large': 484,
+                     'e': 137,
+                     'g': 56,
+                     'p': 67,
+                     'woven': 6,
+                     'texture': 7,
+                     'asked': 778,
+                     'maker': 5,
+                     'monogram': 5,
+                     'rather': 220,
+                     'stands': 20,
+                     'gesellschaft': 2,
+                     'german': 197,
+                     'company': 193,
+                     'customary': 20,
+                     'contraction': 62,
+                     'like': 1081,
+                     'co': 31,
+                     'course': 390,
+                     'papier': 2,
+                     'eg': 2,
+                     'let': 507,
+                     'glance': 92,
+                     'continental': 47,
+                     'gazetteer': 2,
+                     'took': 574,
+                     'heavy': 140,
+                     'brown': 72,
+                     'volume': 31,
+                     'shelves': 4,
+                     'eglow': 2,
+                     'eglonitz': 2,
+                     'here': 692,
+                     'egria': 2,
+                     'speaking': 186,
+                     'far': 409,
+                     'carlsbad': 2,
+                     'remarkable': 78,
+                     'being': 919,
+                     'scene': 50,
+                     'death': 331,
+                     'wallenstein': 2,
+                     'its': 1636,
+                     'numerous': 51,
+                     'glass': 117,
+                     'factories': 30,
+                     'mills': 40,
+                     'ha': 76,
+                     'boy': 170,
+                     'sparkled': 6,
+                     'sent': 320,
+                     'great': 793,
+                     'triumphant': 17,
+                     'cloud': 31,
+                     'made': 1008,
+                     'precisely': 25,
+                     'construction': 26,
+                     'sentence': 27,
+                     'frenchman': 103,
+                     'russian': 462,
+                     'uncourteous': 2,
+                     'verbs': 2,
+                     'only': 1874,
+                     'remains': 74,
+                     'therefore': 187,
+                     'discover': 29,
+                     'wanted': 214,
+                     'writes': 21,
+                     'prefers': 3,
+                     'wearing': 88,
+                     'showing': 105,
+                     'face': 1126,
+                     'comes': 92,
+                     'mistaken': 60,
+                     'resolve': 15,
+                     'doubts': 40,
+                     'sharp': 84,
+                     'sound': 220,
+                     'horses': 263,
+                     'hoofs': 25,
+                     'grating': 11,
+                     'wheels': 48,
+                     'curb': 5,
+                     'followed': 330,
+                     'pull': 24,
+                     'whistled': 14,
+                     'pair': 41,
+                     'yes': 689,
+                     'continued': 292,
+                     'glancing': 99,
+                     'window': 187,
+                     'nice': 54,
+                     'brougham': 5,
+                     'beauties': 3,
+                     'hundred': 230,
+                     'fifty': 95,
+                     'guineas': 4,
+                     'apiece': 8,
+                     'money': 327,
+                     'nothing': 647,
+                     'else': 202,
+                     'better': 267,
+                     'bit': 64,
+                     'doctor': 184,
+                     'stay': 75,
+                     'lost': 225,
+                     'boswell': 2,
+                     'promises': 16,
+                     'interesting': 72,
+                     'pity': 76,
+                     'miss': 113,
+                     'client': 34,
+                     'want': 324,
+                     'sit': 90,
+                     'best': 269,
+                     'slow': 66,
+                     'step': 140,
+                     'stairs': 32,
+                     'passage': 111,
+                     'paused': 80,
+                     'immediately': 183,
+                     'outside': 111,
+                     'loud': 65,
+                     'authoritative': 3,
+                     'tap': 11,
+                     'come': 935,
+                     'entered': 283,
+                     'less': 368,
+                     'feet': 180,
+                     'inches': 17,
+                     'height': 37,
+                     'limbs': 68,
+                     'hercules': 5,
+                     'dress': 139,
+                     'rich': 93,
+                     'richness': 3,
+                     'england': 312,
+                     'bad': 156,
+                     'taste': 24,
+                     'bands': 28,
+                     'astrakhan': 2,
+                     'slashed': 4,
+                     'sleeves': 31,
+                     'fronts': 2,
+                     'breasted': 2,
+                     'coat': 173,
+                     'deep': 216,
+                     'cloak': 63,
+                     'thrown': 93,
+                     'shoulders': 126,
+                     'lined': 33,
+                     'flame': 16,
+                     'coloured': 22,
+                     'silk': 51,
+                     'secured': 49,
+                     'neck': 204,
+                     'brooch': 2,
+                     'consisted': 39,
+                     'single': 174,
+                     'flaming': 9,
+                     'boots': 92,
+                     'extended': 76,
+                     'halfway': 20,
+                     'calves': 4,
+                     'trimmed': 9,
+                     'tops': 4,
+                     'fur': 39,
+                     'completed': 26,
+                     'impression': 68,
+                     'barbaric': 3,
+                     'opulence': 4,
+                     'suggested': 70,
+                     'appearance': 136,
+                     'carried': 283,
+                     'broad': 93,
+                     'brimmed': 5,
+                     'hand': 835,
+                     'wore': 59,
+                     'upper': 131,
+                     'extending': 36,
+                     'past': 224,
+                     'cheekbones': 5,
+                     'vizard': 2,
+                     'apparently': 69,
+                     'raised': 213,
+                     'lower': 197,
+                     'appeared': 198,
+                     'hanging': 43,
+                     'straight': 125,
+                     'chin': 31,
+                     'suggestive': 12,
+                     'resolution': 58,
+                     'pushed': 82,
+                     'length': 64,
+                     'obstinacy': 8,
+                     'harsh': 23,
+                     'voice': 463,
+                     'strongly': 42,
+                     'marked': 139,
+                     'accent': 19,
+                     'uncertain': 31,
+                     'pray': 80,
+                     'seat': 171,
+                     'colleague': 8,
+                     'dr': 49,
+                     'occasionally': 90,
+                     'cases': 454,
+                     'whom': 490,
+                     'honour': 17,
+                     'count': 749,
+                     'von': 12,
+                     'kramm': 3,
+                     'nobleman': 12,
+                     'understand': 413,
+                     'discretion': 14,
+                     'trust': 69,
+                     'extreme': 73,
+                     'prefer': 22,
+                     'communicate': 16,
+                     'alone': 338,
+                     'rose': 244,
+                     'caught': 91,
+                     'wrist': 69,
+                     'back': 747,
+                     'chair': 136,
+                     'none': 111,
+                     'say': 756,
+                     'anything': 380,
+                     'shrugged': 36,
+                     'begin': 98,
+                     'binding': 19,
+                     'absolute': 57,
+                     'secrecy': 19,
+                     'years': 572,
+                     'end': 466,
+                     'present': 330,
+                     'weight': 71,
+                     'influence': 139,
+                     'european': 100,
+                     'history': 440,
+                     'promise': 68,
+                     'excuse': 54,
+                     'strange': 221,
+                     'august': 71,
+                     'person': 186,
+                     'employs': 3,
+                     'wishes': 43,
+                     'agent': 26,
+                     'unknown': 88,
+                     'confess': 37,
+                     'once': 570,
+                     'called': 451,
+                     'exactly': 48,
+                     'aware': 53,
+                     'dryly': 6,
+                     'circumstances': 108,
+                     'delicacy': 12,
+                     'precaution': 10,
+                     'taken': 439,
+                     'quench': 4,
+                     'grow': 75,
+                     'seriously': 64,
+                     'compromise': 72,
+                     'families': 46,
+                     'speak': 256,
+                     'plainly': 40,
+                     'implicates': 6,
+                     'house': 662,
+                     'ormstein': 3,
+                     'hereditary': 15,
+                     'kings': 28,
+                     'murmured': 19,
+                     'settling': 17,
+                     'closing': 36,
+                     'glanced': 177,
+                     {\ldots}\})
+\end{Verbatim}
+            
+    \subsubsection{编辑距离:}\label{ux7f16ux8f91ux8dddux79bb}
+
+两个词之间的编辑距离定义为使用了几次插入(在词中插入一个单字母),
+删除(删除一个单字母), 交换(交换相邻两个字母),
+替换(把一个字母换成另一个)的操作从一个词变到另一个词.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{}返回所有与单词 w 编辑距离为 1 的集合}
+        \PY{k}{def} \PY{n+nf}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{word}\PY{p}{)}
+            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]} \PY{o}{+}                     \PY{c+c1}{\PYZsh{} deletion}
+                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]} \PY{o}{+} \PY{c+c1}{\PYZsh{} transposition}
+                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{c}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]} \PY{o}{+} \PY{c+c1}{\PYZsh{} alteration}
+                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{c}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]}\PY{p}{)}  \PY{c+c1}{\PYZsh{} insertion}
+        
+        \PY{c+c1}{\PYZsh{} 与 something 编辑距离为2的单词居然达到了 114,324 个}
+        \PY{c+c1}{\PYZsh{} 优化:在这些编辑距离小于2的词中间, 只把那些正确的词作为候选词,只能返回 3 个单词: ‘smoothing’, ‘something’ 和 ‘soothing’}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{}返回所有与单词 w 编辑距离为 2 的集合}
+        \PY{c+c1}{\PYZsh{}在这些编辑距离小于2的词中间, 只把那些正确的词作为候选词}
+        \PY{k}{def} \PY{n+nf}{edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{e2} \PY{k}{for} \PY{n}{e1} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{k}{for} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{e1}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    正常来说把一个元音拼成另一个的概率要大于辅音 (因为人常常把 hello 打成
+hallo 这样); 把单词的第一个字母拼错的概率会相对小,
+等等.但是为了简单起见, 选择了一个简单的方法:
+编辑距离为1的正确单词比编辑距离为2的优先级高,
+而编辑距离为0的正确单词优先级比编辑距离为1的高.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{k}{def} \PY{n+nf}{known}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{w} \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n}{words} \PY{k}{if} \PY{n}{w} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{}如果known(set)非空, candidate 就会选取这个集合, 而不继续计算后面的}
+        \PY{k}{def} \PY{n+nf}{correct}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
+            \PY{n}{candidates} \PY{o}{=} \PY{n}{known}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{]}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known}\PY{p}{(}\PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{o+ow}{or} \PY{p}{[}\PY{n}{word}\PY{p}{]}
+            \PY{k}{return} \PY{n+nb}{max}\PY{p}{(}\PY{n}{candidates}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{w}\PY{p}{:} \PY{n}{NWORDS}\PY{p}{[}\PY{n}{w}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
