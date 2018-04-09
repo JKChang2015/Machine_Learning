@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Bayes' theorem}
+    \title{Naive Bayes classifier}
     
     
     
@@ -280,1179 +280,619 @@
     
 
     
-    \subsubsection{Bayes' theorem}\label{bayes-theorem}
+    \subsubsection{Naive Bayes classifier}\label{naive-bayes-classifier}
 
-In probability theory and statistics, Bayes' theorem (alternatively
-Bayes' law or Bayes' rule, also written as Bayes's theorem) describes
-the probability of an event, based on prior knowledge of conditions that
-might be related to the event.
+In machine learning, naive Bayes classifiers are a family of simple
+"probabilistic classifiers "based on applying Bayes' theorem with strong
+(naive) independence assumptions between the features.
 
-Bayes' theorem is stated mathematically as the following equation:
-\[ P(A\mid B)={\frac {P(B\mid A)\,P(A)}{P(B)}},\]
+\[{\mbox{posterior}}={\frac {{\mbox{prior}}\times {\mbox{likelihood}}}{\mbox{evidence}}}\]
 
-where, * P(A\textbar{}B) is a conditional probability: the likelihood of
-event A occurring given that B is true. * P(B\textbar{}A) is also a
-conditional probability: the likelihood of event B occurring given that
-A is true. * P(A) and P(B) are the probabilities of observing A and B
-independently of each other; this is known as the marginal probability.
+Now the "naive" conditional independence assumptions come into play:
+assume that each feature \(x_{i}\) is conditionally independent of every
+other feature \(x_{j}\) for \(j\neq i\), given the category \(C_{k}\).
+This means that:
+\[{\displaystyle p(x_{i}\mid x_{i+1},\dots ,x_{n},C_{k})=p(x_{i}\mid C_{k})\,}\]
+Thus, the joint model can be expressed as:
+\[{\displaystyle {\begin{aligned}p(C_{k}\mid x_{1},\dots ,x_{n})&\varpropto p(C_{k},x_{1},\dots ,x_{n})=\\&=p(C_{k})\ p(x_{1}\mid C_{k})\ p(x_{2}\mid C_{k})\ p(x_{3}\mid C_{k})\ \cdots \\&=p(C_{k})\prod _{i=1}^{n}p(x_{i}\mid C_{k})\,.\end{aligned}}}\]
 
-\[P(A|B) \propto P(B|A)P(A)\]
+    The discussion so far has derived the independent feature model, that
+is, the naive Bayes probability model. The naive Bayes classifier
+combines this model with a decision rule. One common rule is to pick the
+hypothesis that is most probable; this is known as the maximum a
+posteriori or MAP decision rule. The corresponding classifier, a Bayes
+classifier, is the function that assigns a class label
+\({\hat {y}}=C_{k}\) for some k as follows:
+\[{\displaystyle {\hat {y}}={\underset {k\in \{1,\dots ,K\}}{\operatorname {argmax} }}\ p(C_{k})\displaystyle \prod _{i=1}^{n}p(x_{i}\mid C_{k}).}\]
 
-    \begin{itemize}
+    \subsubsection{Gaussian naive Bayes}\label{gaussian-naive-bayes}
+
+When dealing with continuous data, a typical assumption is that the
+continuous values \texttt{associated} with each class are distributed
+according to a \texttt{Gaussian\ distribution}. For example, suppose the
+training data contains a continuous attribute, \texttt{x}. We first
+segment the data by the class, and then compute the mean and variance of
+\texttt{x} in each class. Let \(\mu _{k}\) be the mean of the values in
+x associated with class \(C_{k}\), and let \(\sigma _{k}^{2}\) be the
+variance of the values in x associated with class Ck. Suppose we have
+collected some observation value v. Then, the probability distribution
+of v given a class \(C_{k}\), \(p(x=v\mid C_{k})\), can be computed by
+plugging v into the equation for a Normal distribution parameterized by
+\(\mu _{k}\) and \(\sigma _{k}^{2}\): that is,
+\[p(x=v\mid C_{k})={\frac {1}{\sqrt {2\pi \sigma _{k}^{2}}}}\,e^{-{\frac {(v-\mu _{k})^{2}}{2\sigma _{k}^{2}}}}\]
+
+    \section{News Classifior}\label{news-classifior}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  正向概率：假设袋子里有N个白球，M个黑球，伸手摸球，摸到黑球的概率有多大
+  Data cleaning (Stop words/punctuation)
 \item
-  逆向概率：事先不知道袋子里的黑白球比例。观察取出的球(结果)的颜色，对袋子里的黑白比率做出推测
-\end{itemize}
+  Similarity
+\item
+  Clustering / Classification / Regression / Prediction
+\end{enumerate}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}1}]:} \PY{c+c1}{\PYZsh{} Spelling Correction}
-        \PY{c+c1}{\PYZsh{} P(A): the probability that the result A occuring}
-        \PY{c+c1}{\PYZsh{} P(B|A): the probability that the result A can affect input B}
-        
-        \PY{k+kn}{import} \PY{n+nn}{re}\PY{o}{,} \PY{n+nn}{collections}
-        
-        
-        \PY{k}{def} \PY{n+nf}{words}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n}{re}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[a\PYZhy{}z]+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-        
-        
-        \PY{k}{def} \PY{n+nf}{train}\PY{p}{(}\PY{n}{features}\PY{p}{)}\PY{p}{:}
-            \PY{n}{model} \PY{o}{=} \PY{n}{collections}\PY{o}{.}\PY{n}{defaultdict}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{)}
-            \PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{n}{features}\PY{p}{:}
-                \PY{n}{model}\PY{p}{[}\PY{n}{f}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-            \PY{k}{return} \PY{n}{model}
-        
-        
-        \PY{n}{NWORDS} \PY{o}{=} \PY{n}{train}\PY{p}{(}\PY{n}{words}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{big.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-        
-        \PY{n}{alphabet} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{abcdefghijklmnopqrstuvwxyz}\PY{l+s+s1}{\PYZsq{}}
-        
-        
-        \PY{k}{def} \PY{n+nf}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{word}\PY{p}{)}
-            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}
-                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} deletion}
-                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} transposition}
-                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{c} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]} \PY{o}{+}  \PY{c+c1}{\PYZsh{} alteration}
-                \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]} \PY{o}{+} \PY{n}{c} \PY{o}{+} \PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]}\PY{p}{)}  \PY{c+c1}{\PYZsh{} insertion}
-        
-        
-        \PY{k}{def} \PY{n+nf}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{e2} \PY{k}{for} \PY{n}{e1} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{k}{for} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{e1}\PY{p}{)} \PY{k}{if} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
-        
-        
-        \PY{k}{def} \PY{n+nf}{known}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{w} \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n}{words} \PY{k}{if} \PY{n}{w} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
-        
-        
-        \PY{k}{def} \PY{n+nf}{correct}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{n}{candidates} \PY{o}{=} \PY{n}{known}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{]}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known}\PY{p}{(}
-                \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{o+ow}{or} \PY{p}{[}\PY{n}{word}\PY{p}{]}
-            \PY{k}{return} \PY{n+nb}{max}\PY{p}{(}\PY{n}{candidates}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{w}\PY{p}{:} \PY{n}{NWORDS}\PY{p}{[}\PY{n}{w}\PY{p}{]}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{jieba}
+        \PY{c+c1}{\PYZsh{} http://www.sogou.com/labs/resource/ca.php}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{correct}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{knon}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{df\PYZus{}news} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}table}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/val.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{n}{names} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{theme}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{URL}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{content}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{encoding}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{utf\PYZhy{}8}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{df\PYZus{}news}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 5000 entries, 0 to 4999
+Data columns (total 4 columns):
+category    5000 non-null object
+theme       5000 non-null object
+URL         5000 non-null object
+content     5000 non-null object
+dtypes: object(4)
+memory usage: 156.3+ KB
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{df\PYZus{}news} \PY{o}{=} \PY{n}{df\PYZus{}news}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+        \PY{n}{df\PYZus{}news}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}2}]:} 'know'
+{\color{outcolor}Out[{\color{outcolor}3}]:}   category                                 theme  \textbackslash{}
+        0       汽车  新辉腾　４．２　Ｖ８　４座加长Ｉｎｄｉｖｉｄｕａｌ版２０１１款　最新报价   
+        1       汽车                         ９１８　Ｓｐｙｄｅｒ概念车   
+        2       汽车              日内瓦亮相　ＭＩＮＩ性能版／概念车－１．６Ｔ引擎   
+        3       汽车                清仓大甩卖一汽夏利Ｎ５威志Ｖ２低至３．３９万   
+        4       汽车                    大众敞篷家族新成员　高尔夫敞篷版实拍   
+        
+                                                         URL  \textbackslash{}
+        0        http://auto.data.people.com.cn/model\_15782/   
+        1  http://auto.data.people.com.cn/prdview\_165423{\ldots}   
+        2  http://auto.data.people.com.cn/news/story\_5249{\ldots}   
+        3  http://auto.data.people.com.cn/news/story\_6144{\ldots}   
+        4  http://auto.data.people.com.cn/news/story\_5686{\ldots}   
+        
+                                                     content  
+        0  经销商　电话　试驾／订车Ｕ憬杭州滨江区江陵路１７８０号４００８－１１２２３３转５８６４＃保常{\ldots}  
+        1       呼叫热线　４００８－１００－３００　服务邮箱　ｋｆ＠ｐｅｏｐｌｅｄａｉｌｙ．ｃｏｍ．ｃｎ  
+        2  ＭＩＮＩ品牌在二月曾经公布了最新的ＭＩＮＩ新概念车Ｃｌｕｂｖａｎ效果图，不过现在在日内瓦车展{\ldots}  
+        3  清仓大甩卖！一汽夏利Ｎ５、威志Ｖ２低至３．３９万＝日，启新中国一汽强势推出一汽夏利Ｎ５、威志{\ldots}  
+        4  在今年３月的日内瓦车展上，我们见到了高尔夫家族的新成员，高尔夫敞篷版，这款全新敞篷车受到了众{\ldots}  
 \end{Verbatim}
             
-    \subsubsection{求解：argmaxc P(c\textbar{}w) -\textgreater{} argmaxc
-P(w\textbar{}c) P(c) /
-P(w)}\label{ux6c42ux89e3argmaxc-pcw---argmaxc-pwc-pc-pw}
-
-\begin{itemize}
-\tightlist
-\item
-  P(c), 文章中出现一个正确拼写词 c 的概率, 也就是说, 在英语文章中, c
-  出现的概率有多大
-\item
-  P(w\textbar{}c), 在用户想键入 c 的情况下敲成 w 的概率.
-  因为这个是代表用户会以多大的概率把 c 敲错成 w
-\item
-  argmaxc, 用来枚举所有可能的 c 并且选取概率最大的
-\end{itemize}
+    \subsubsection{term spliter}\label{term-spliter}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} 把语料中的单词全部抽取出来, 转成小写, 并且去除单词中间的特殊符号}
-        \PY{k}{def} \PY{n+nf}{words}\PY{p}{(}\PY{n}{text}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{re}\PY{o}{.}\PY{n}{findall}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{[a\PYZhy{}z]+}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{text}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)} 
-         
-        \PY{k}{def} \PY{n+nf}{train}\PY{p}{(}\PY{n}{features}\PY{p}{)}\PY{p}{:}
-            \PY{n}{model} \PY{o}{=} \PY{n}{collections}\PY{o}{.}\PY{n}{defaultdict}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{)}
-            \PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{n}{features}\PY{p}{:}
-                \PY{n}{model}\PY{p}{[}\PY{n}{f}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-            \PY{k}{return} \PY{n}{model}
-         
-        \PY{n}{NWORDS} \PY{o}{=} \PY{n}{train}\PY{p}{(}\PY{n}{words}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{big.txt}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{content} \PY{o}{=} \PY{n}{df\PYZus{}news}\PY{o}{.}\PY{n}{content}\PY{o}{.}\PY{n}{values}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+        \PY{n+nb}{print} \PY{p}{(}\PY{n}{content}\PY{p}{[}\PY{l+m+mi}{1000}\PY{p}{]}\PY{p}{)}
 \end{Verbatim}
 
 
-    要是遇到我们从来没有过见过的新词怎么办. 假如说一个词拼写完全正确,
-但是语料库中没有包含这个词, 从而这个词也永远不会出现在训练集中. 于是,
-我们就要返回出现这个词的概率是0. 这个情况不太妙,
-因为概率为0这个代表了这个事件绝对不可能发生, 而在我们的概率模型中,
-我们期望用一个很小的概率来代表这种情况. lambda: 1
+    \begin{Verbatim}[commandchars=\\\{\}]
+阿里巴巴集团昨日宣布，将在集团管理层面设立首席数据官岗位（Ｃｈｉｅｆ　Ｄａｔａ　Ｏｆｆｉｃｅｒ），阿里巴巴Ｂ２Ｂ公司ＣＥＯ陆兆禧将会出任上述职务，向集团ＣＥＯ马云直接汇报。＞菹ぃ和６月初的首席风险官职务任命相同，首席数据官亦为阿里巴巴集团在完成与雅虎股权谈判，推进“ｏｎｅ　ｃｏｍｐａｎｙ”目标后，在集团决策层面新增的管理岗位。０⒗锛团昨日表示，“变成一家真正意义上的数据公司”已是战略共识。记者刘夏
+
+    \end{Verbatim}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{NWORDS}
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{content\PYZus{}S} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{line} \PY{o+ow}{in} \PY{n}{content}\PY{p}{:}
+            \PY{n}{current\PYZus{}segment} \PY{o}{=} \PY{n}{jieba}\PY{o}{.}\PY{n}{lcut}\PY{p}{(}\PY{n}{line}\PY{p}{)} \PY{c+c1}{\PYZsh{} term splitor}
+            \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{current\PYZus{}segment}\PY{p}{)} \PY{o}{\PYZgt{}} \PY{l+m+mi}{1} \PY{o+ow}{and} \PY{n}{current\PYZus{}segment} \PY{o}{!=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+se}{\PYZbs{}r}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} 
+                \PY{n}{content\PYZus{}S}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{current\PYZus{}segment}\PY{p}{)} 
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Building prefix dict from the default dictionary {\ldots}
+Loading model from cache /var/folders/h0/9\_cmr0zd76zf8c0zf0pkqhdr0159kl/T/jieba.cache
+Loading model cost 2.616 seconds.
+Prefix dict has been built succesfully.
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{content\PYZus{}S}\PY{p}{[}\PY{l+m+mi}{1000}\PY{p}{]}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{20}\PY{p}{]}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}4}]:} defaultdict(<function \_\_main\_\_.train.<locals>.<lambda>()>,
-                    \{'the': 80031,
-                     'project': 289,
-                     'gutenberg': 264,
-                     'ebook': 88,
-                     'of': 40026,
-                     'adventures': 18,
-                     'sherlock': 102,
-                     'holmes': 468,
-                     'by': 6739,
-                     'sir': 178,
-                     'arthur': 35,
-                     'conan': 5,
-                     'doyle': 6,
-                     'in': 22048,
-                     'our': 1067,
-                     'series': 129,
-                     'copyright': 70,
-                     'laws': 234,
-                     'are': 3631,
-                     'changing': 45,
-                     'all': 4145,
-                     'over': 1283,
-                     'world': 363,
-                     'be': 6156,
-                     'sure': 124,
-                     'to': 28767,
-                     'check': 39,
-                     'for': 6940,
-                     'your': 1280,
-                     'country': 424,
-                     'before': 1364,
-                     'downloading': 6,
-                     'or': 5353,
-                     'redistributing': 8,
-                     'this': 4064,
-                     'any': 1205,
-                     'other': 1503,
-                     'header': 8,
-                     'should': 1298,
-                     'first': 1178,
-                     'thing': 304,
-                     'seen': 445,
-                     'when': 2924,
-                     'viewing': 8,
-                     'file': 22,
-                     'please': 173,
-                     'do': 1504,
-                     'not': 6626,
-                     'remove': 54,
-                     'it': 10682,
-                     'change': 151,
-                     'edit': 5,
-                     'without': 1016,
-                     'written': 118,
-                     'permission': 53,
-                     'read': 219,
-                     'legal': 53,
-                     'small': 528,
-                     'print': 48,
-                     'and': 38313,
-                     'information': 74,
-                     'about': 1498,
-                     'at': 6792,
-                     'bottom': 43,
-                     'included': 44,
-                     'is': 9775,
-                     'important': 286,
-                     'specific': 38,
-                     'rights': 169,
-                     'restrictions': 24,
-                     'how': 1316,
-                     'may': 2552,
-                     'used': 277,
-                     'you': 5623,
-                     'can': 1096,
-                     'also': 779,
-                     'find': 295,
-                     'out': 1988,
-                     'make': 505,
-                     'a': 21156,
-                     'donation': 11,
-                     'get': 469,
-                     'involved': 108,
-                     'welcome': 19,
-                     'free': 422,
-                     'plain': 109,
-                     'vanilla': 7,
-                     'electronic': 59,
-                     'texts': 8,
-                     'ebooks': 55,
-                     'readable': 14,
-                     'both': 530,
-                     'humans': 3,
-                     'computers': 8,
-                     'since': 261,
-                     'these': 1232,
-                     'were': 4290,
-                     'prepared': 139,
-                     'thousands': 94,
-                     'volunteers': 23,
-                     'title': 40,
-                     'author': 30,
-                     'release': 29,
-                     'date': 49,
-                     'march': 136,
-                     'most': 909,
-                     'recently': 31,
-                     'updated': 5,
-                     'november': 42,
-                     'edition': 22,
-                     'language': 62,
-                     'english': 212,
-                     'character': 175,
-                     'set': 325,
-                     'encoding': 6,
-                     'ascii': 12,
-                     'start': 68,
-                     'additional': 31,
-                     'editing': 7,
-                     'jose': 2,
-                     'menendez': 2,
-                     'contents': 51,
-                     'i': 7683,
-                     'scandal': 20,
-                     'bohemia': 16,
-                     'ii': 78,
-                     'red': 289,
-                     'headed': 38,
-                     'league': 54,
-                     'iii': 92,
-                     'case': 439,
-                     'identity': 12,
-                     'iv': 56,
-                     'boscombe': 17,
-                     'valley': 79,
-                     'mystery': 40,
-                     'v': 52,
-                     'five': 280,
-                     'orange': 24,
-                     'pips': 13,
-                     'vi': 38,
-                     'man': 1653,
-                     'with': 9741,
-                     'twisted': 22,
-                     'lip': 57,
-                     'vii': 35,
-                     'adventure': 35,
-                     'blue': 144,
-                     'carbuncle': 18,
-                     'viii': 40,
-                     'speckled': 6,
-                     'band': 55,
-                     'ix': 29,
-                     'engineer': 13,
-                     's': 5632,
-                     'thumb': 52,
-                     'x': 137,
-                     'noble': 49,
-                     'bachelor': 19,
-                     'xi': 29,
-                     'beryl': 5,
-                     'coronet': 30,
-                     'xii': 29,
-                     'copper': 27,
-                     'beeches': 13,
-                     'she': 3947,
-                     'always': 609,
-                     'woman': 326,
-                     'have': 3494,
-                     'seldom': 77,
-                     'heard': 637,
-                     'him': 5231,
-                     'mention': 47,
-                     'her': 5285,
-                     'under': 964,
-                     'name': 263,
-                     'his': 10035,
-                     'eyes': 940,
-                     'eclipses': 3,
-                     'predominates': 4,
-                     'whole': 745,
-                     'sex': 12,
-                     'was': 11411,
-                     'that': 12513,
-                     'he': 12402,
-                     'felt': 698,
-                     'emotion': 37,
-                     'akin': 15,
-                     'love': 485,
-                     'irene': 19,
-                     'adler': 17,
-                     'emotions': 11,
-                     'one': 3372,
-                     'particularly': 175,
-                     'abhorrent': 2,
-                     'cold': 258,
-                     'precise': 14,
-                     'but': 5654,
-                     'admirably': 8,
-                     'balanced': 7,
-                     'mind': 342,
-                     'take': 617,
-                     'perfect': 40,
-                     'reasoning': 42,
-                     'observing': 22,
-                     'machine': 40,
-                     'has': 1604,
-                     'as': 8065,
-                     'lover': 27,
-                     'would': 1954,
-                     'placed': 183,
-                     'himself': 1159,
-                     'false': 65,
-                     'position': 433,
-                     'never': 594,
-                     'spoke': 219,
-                     'softer': 11,
-                     'passions': 30,
-                     'save': 111,
-                     'gibe': 3,
-                     'sneer': 7,
-                     'they': 3939,
-                     'admirable': 15,
-                     'things': 322,
-                     'observer': 14,
-                     'excellent': 63,
-                     'drawing': 241,
-                     'veil': 17,
-                     'from': 5710,
-                     'men': 1146,
-                     'motives': 15,
-                     'actions': 78,
-                     'trained': 24,
-                     'reasoner': 7,
-                     'admit': 66,
-                     'such': 1437,
-                     'intrusions': 2,
-                     'into': 2125,
-                     'own': 786,
-                     'delicate': 55,
-                     'finely': 12,
-                     'adjusted': 17,
-                     'temperament': 6,
-                     'introduce': 24,
-                     'distracting': 2,
-                     'factor': 42,
-                     'which': 4843,
-                     'might': 537,
-                     'throw': 49,
-                     'doubt': 153,
-                     'upon': 1112,
-                     'mental': 38,
-                     'results': 230,
-                     'grit': 2,
-                     'sensitive': 36,
-                     'instrument': 36,
-                     'crack': 21,
-                     'high': 291,
-                     'power': 549,
-                     'lenses': 2,
-                     'more': 1998,
-                     'disturbing': 10,
-                     'than': 1207,
-                     'strong': 169,
-                     'nature': 171,
-                     'yet': 489,
-                     'there': 2973,
-                     'late': 166,
-                     'dubious': 2,
-                     'questionable': 4,
-                     'memory': 56,
-                     'had': 7384,
-                     'little': 1002,
-                     'lately': 23,
-                     'my': 2250,
-                     'marriage': 97,
-                     'drifted': 6,
-                     'us': 685,
-                     'away': 839,
-                     'each': 412,
-                     'complete': 146,
-                     'happiness': 144,
-                     'home': 296,
-                     'centred': 3,
-                     'interests': 119,
-                     'rise': 241,
-                     'up': 2285,
-                     'around': 272,
-                     'who': 3051,
-                     'finds': 24,
-                     'master': 142,
-                     'establishment': 41,
-                     'sufficient': 76,
-                     'absorb': 5,
-                     'attention': 192,
-                     'while': 769,
-                     'loathed': 2,
-                     'every': 651,
-                     'form': 508,
-                     'society': 170,
-                     'bohemian': 9,
-                     'soul': 169,
-                     'remained': 232,
-                     'lodgings': 12,
-                     'baker': 50,
-                     'street': 181,
-                     'buried': 22,
-                     'among': 452,
-                     'old': 1181,
-                     'books': 60,
-                     'alternating': 3,
-                     'week': 96,
-                     'between': 655,
-                     'cocaine': 5,
-                     'ambition': 14,
-                     'drowsiness': 5,
-                     'drug': 22,
-                     'fierce': 13,
-                     'energy': 46,
-                     'keen': 33,
-                     'still': 923,
-                     'ever': 275,
-                     'deeply': 78,
-                     'attracted': 37,
-                     'study': 145,
-                     'crime': 62,
-                     'occupied': 117,
-                     'immense': 78,
-                     'faculties': 9,
-                     'extraordinary': 75,
-                     'powers': 150,
-                     'observation': 40,
-                     'following': 209,
-                     'those': 1202,
-                     'clues': 4,
-                     'clearing': 30,
-                     'mysteries': 10,
-                     'been': 2600,
-                     'abandoned': 73,
-                     'hopeless': 18,
-                     'official': 92,
-                     'police': 95,
-                     'time': 1530,
-                     'some': 1537,
-                     'vague': 40,
-                     'account': 178,
-                     'doings': 12,
-                     'summons': 12,
-                     'odessa': 4,
-                     'trepoff': 2,
-                     'murder': 31,
-                     'singular': 37,
-                     'tragedy': 10,
-                     'atkinson': 2,
-                     'brothers': 51,
-                     'trincomalee': 2,
-                     'finally': 157,
-                     'mission': 35,
-                     'accomplished': 40,
-                     'so': 3018,
-                     'delicately': 4,
-                     'successfully': 26,
-                     'reigning': 4,
-                     'family': 211,
-                     'holland': 13,
-                     'beyond': 226,
-                     'signs': 99,
-                     'activity': 132,
-                     'however': 431,
-                     'merely': 190,
-                     'shared': 26,
-                     'readers': 12,
-                     'daily': 45,
-                     'press': 82,
-                     'knew': 497,
-                     'former': 178,
-                     'friend': 284,
-                     'companion': 82,
-                     'night': 386,
-                     'on': 6644,
-                     'twentieth': 20,
-                     'returning': 69,
-                     'journey': 70,
-                     'patient': 384,
-                     'now': 1698,
-                     'returned': 195,
-                     'civil': 178,
-                     'practice': 96,
-                     'way': 860,
-                     'led': 197,
-                     'me': 1921,
-                     'through': 816,
-                     'passed': 368,
-                     'well': 1199,
-                     'remembered': 121,
-                     'door': 499,
-                     'must': 956,
-                     'associated': 197,
-                     'wooing': 3,
-                     'dark': 182,
-                     'incidents': 15,
-                     'scarlet': 23,
-                     'seized': 115,
-                     'desire': 97,
-                     'see': 1102,
-                     'again': 867,
-                     'know': 1049,
-                     'employing': 8,
-                     'rooms': 87,
-                     'brilliantly': 6,
-                     'lit': 75,
-                     'even': 947,
-                     'looked': 761,
-                     'saw': 600,
-                     'tall': 75,
-                     'spare': 28,
-                     'figure': 104,
-                     'pass': 155,
-                     'twice': 85,
-                     'silhouette': 2,
-                     'against': 661,
-                     'blind': 24,
-                     'pacing': 27,
-                     'room': 961,
-                     'swiftly': 39,
-                     'eagerly': 40,
-                     'head': 726,
-                     'sunk': 28,
-                     'chest': 82,
-                     'hands': 456,
-                     'clasped': 12,
-                     'behind': 402,
-                     'mood': 52,
-                     'habit': 56,
-                     'attitude': 73,
-                     'manner': 136,
-                     'told': 491,
-                     'their': 2956,
-                     'story': 134,
-                     'work': 383,
-                     'risen': 31,
-                     'created': 63,
-                     'dreams': 17,
-                     'hot': 120,
-                     'scent': 18,
-                     'new': 1212,
-                     'problem': 77,
-                     'rang': 30,
-                     'bell': 66,
-                     'shown': 114,
-                     'chamber': 36,
-                     'formerly': 78,
-                     'part': 705,
-                     'effusive': 3,
-                     'glad': 151,
-                     'think': 558,
-                     'hardly': 174,
-                     'word': 299,
-                     'spoken': 93,
-                     'kindly': 87,
-                     'eye': 111,
-                     'waved': 30,
-                     'an': 3424,
-                     'armchair': 50,
-                     'threw': 97,
-                     'across': 223,
-                     'cigars': 8,
-                     'indicated': 89,
-                     'spirit': 168,
-                     'gasogene': 2,
-                     'corner': 129,
-                     'then': 1559,
-                     'stood': 384,
-                     'fire': 275,
-                     'introspective': 4,
-                     'fashion': 50,
-                     'wedlock': 2,
-                     'suits': 9,
-                     'remarked': 170,
-                     'watson': 84,
-                     'put': 436,
-                     'seven': 133,
-                     'half': 319,
-                     'pounds': 27,
-                     'answered': 227,
-                     'indeed': 140,
-                     'thought': 903,
-                     'just': 768,
-                     'trifle': 12,
-                     'fancy': 51,
-                     'observe': 38,
-                     'did': 1876,
-                     'tell': 493,
-                     'intended': 59,
-                     'go': 906,
-                     'harness': 28,
-                     'deduce': 15,
-                     'getting': 93,
-                     'yourself': 163,
-                     'very': 1341,
-                     'wet': 61,
-                     'clumsy': 9,
-                     'careless': 15,
-                     'servant': 47,
-                     'girl': 167,
-                     'dear': 450,
-                     'said': 3465,
-                     'too': 549,
-                     'much': 672,
-                     'certainly': 120,
-                     'burned': 78,
-                     'lived': 114,
-                     'few': 459,
-                     'centuries': 13,
-                     'ago': 109,
-                     'true': 206,
-                     'walk': 76,
-                     'thursday': 8,
-                     'came': 980,
-                     'dreadful': 69,
-                     'mess': 11,
-                     'changed': 135,
-                     'clothes': 63,
-                     't': 1319,
-                     'imagine': 97,
-                     'mary': 706,
-                     'jane': 3,
-                     'incorrigible': 3,
-                     'wife': 368,
-                     'given': 365,
-                     'notice': 99,
-                     'fail': 41,
-                     'chuckled': 8,
-                     'rubbed': 33,
-                     'long': 992,
-                     'nervous': 55,
-                     'together': 261,
-                     'simplicity': 31,
-                     'itself': 274,
-                     'inside': 44,
-                     'left': 835,
-                     'shoe': 12,
-                     'where': 978,
-                     'firelight': 3,
-                     'strikes': 20,
-                     'leather': 36,
-                     'scored': 5,
-                     'six': 177,
-                     'almost': 326,
-                     'parallel': 18,
-                     'cuts': 6,
-                     'obviously': 39,
-                     'caused': 103,
-                     'someone': 161,
-                     'carelessly': 15,
-                     'scraped': 22,
-                     'round': 557,
-                     'edges': 71,
-                     'sole': 71,
-                     'order': 405,
-                     'crusted': 3,
-                     'mud': 37,
-                     'hence': 33,
-                     'double': 50,
-                     'deduction': 13,
-                     'vile': 17,
-                     'weather': 43,
-                     'malignant': 89,
-                     'boot': 23,
-                     'slitting': 3,
-                     'specimen': 15,
-                     'london': 77,
-                     'slavey': 2,
-                     'if': 2373,
-                     'gentleman': 100,
-                     'walks': 11,
-                     'smelling': 6,
-                     'iodoform': 44,
-                     'black': 236,
-                     'mark': 39,
-                     'nitrate': 8,
-                     'silver': 129,
-                     'right': 711,
-                     'forefinger': 8,
-                     'bulge': 3,
-                     'side': 512,
-                     'top': 43,
-                     'hat': 106,
-                     'show': 214,
-                     'secreted': 3,
-                     'stethoscope': 3,
-                     'dull': 75,
-                     'pronounce': 10,
-                     'active': 97,
-                     'member': 51,
-                     'medical': 23,
-                     'profession': 23,
-                     'could': 1701,
-                     'help': 231,
-                     'laughing': 116,
-                     'ease': 45,
-                     'explained': 61,
-                     'process': 220,
-                     'hear': 184,
-                     'give': 524,
-                     'reasons': 65,
-                     'appears': 109,
-                     'ridiculously': 2,
-                     'simple': 140,
-                     'easily': 115,
-                     'myself': 228,
-                     'though': 651,
-                     'successive': 18,
-                     'instance': 51,
-                     'am': 747,
-                     'baffled': 9,
-                     'until': 326,
-                     'explain': 124,
-                     'believe': 184,
-                     'good': 745,
-                     'yours': 47,
-                     'quite': 503,
-                     'lighting': 17,
-                     'cigarette': 7,
-                     'throwing': 47,
-                     'down': 1129,
-                     'distinction': 20,
-                     'clear': 234,
-                     'example': 287,
-                     'frequently': 219,
-                     'steps': 189,
-                     'lead': 138,
-                     'hall': 84,
-                     'often': 444,
-                     'hundreds': 49,
-                     'times': 237,
-                     'many': 610,
-                     'don': 582,
-                     'observed': 132,
-                     'point': 224,
-                     'seventeen': 11,
-                     'because': 631,
-                     'interested': 66,
-                     'problems': 79,
-                     'enough': 176,
-                     'chronicle': 8,
-                     'two': 1139,
-                     'trifling': 13,
-                     'experiences': 12,
-                     'sheet': 30,
-                     'thick': 78,
-                     'pink': 28,
-                     'tinted': 10,
-                     'notepaper': 3,
-                     'lying': 119,
-                     'open': 326,
-                     'table': 297,
-                     'last': 566,
-                     'post': 118,
-                     'aloud': 29,
-                     'note': 116,
-                     'undated': 2,
-                     'either': 294,
-                     'signature': 10,
-                     'address': 77,
-                     'will': 1578,
-                     'call': 198,
-                     'quarter': 47,
-                     'eight': 129,
-                     'o': 258,
-                     'clock': 121,
-                     'desires': 23,
-                     'consult': 20,
-                     'matter': 366,
-                     'deepest': 16,
-                     'moment': 488,
-                     'recent': 55,
-                     'services': 39,
-                     'royal': 112,
-                     'houses': 118,
-                     'europe': 154,
-                     'safely': 12,
-                     'trusted': 17,
-                     'matters': 137,
-                     'importance': 118,
-                     'exaggerated': 29,
-                     'we': 1907,
-                     'quarters': 73,
-                     'received': 281,
-                     'hour': 158,
-                     'amiss': 7,
-                     'visitor': 75,
-                     'wear': 31,
-                     'mask': 13,
-                     'what': 3012,
-                     'means': 254,
-                     'no': 2349,
-                     'data': 18,
-                     'capital': 145,
-                     'mistake': 40,
-                     'theorise': 2,
-                     'insensibly': 3,
-                     'begins': 48,
-                     'twist': 15,
-                     'facts': 73,
-                     'suit': 26,
-                     'theories': 22,
-                     'instead': 138,
-                     'carefully': 73,
-                     'examined': 50,
-                     'writing': 70,
-                     'paper': 178,
-                     'wrote': 150,
-                     'presumably': 9,
-                     'endeavouring': 9,
-                     'imitate': 8,
-                     'processes': 36,
-                     'bought': 56,
-                     'crown': 62,
-                     'packet': 12,
-                     'peculiarly': 15,
-                     'stiff': 21,
-                     'peculiar': 85,
-                     'hold': 115,
-                     'light': 279,
-                     'large': 484,
-                     'e': 137,
-                     'g': 56,
-                     'p': 67,
-                     'woven': 6,
-                     'texture': 7,
-                     'asked': 778,
-                     'maker': 5,
-                     'monogram': 5,
-                     'rather': 220,
-                     'stands': 20,
-                     'gesellschaft': 2,
-                     'german': 197,
-                     'company': 193,
-                     'customary': 20,
-                     'contraction': 62,
-                     'like': 1081,
-                     'co': 31,
-                     'course': 390,
-                     'papier': 2,
-                     'eg': 2,
-                     'let': 507,
-                     'glance': 92,
-                     'continental': 47,
-                     'gazetteer': 2,
-                     'took': 574,
-                     'heavy': 140,
-                     'brown': 72,
-                     'volume': 31,
-                     'shelves': 4,
-                     'eglow': 2,
-                     'eglonitz': 2,
-                     'here': 692,
-                     'egria': 2,
-                     'speaking': 186,
-                     'far': 409,
-                     'carlsbad': 2,
-                     'remarkable': 78,
-                     'being': 919,
-                     'scene': 50,
-                     'death': 331,
-                     'wallenstein': 2,
-                     'its': 1636,
-                     'numerous': 51,
-                     'glass': 117,
-                     'factories': 30,
-                     'mills': 40,
-                     'ha': 76,
-                     'boy': 170,
-                     'sparkled': 6,
-                     'sent': 320,
-                     'great': 793,
-                     'triumphant': 17,
-                     'cloud': 31,
-                     'made': 1008,
-                     'precisely': 25,
-                     'construction': 26,
-                     'sentence': 27,
-                     'frenchman': 103,
-                     'russian': 462,
-                     'uncourteous': 2,
-                     'verbs': 2,
-                     'only': 1874,
-                     'remains': 74,
-                     'therefore': 187,
-                     'discover': 29,
-                     'wanted': 214,
-                     'writes': 21,
-                     'prefers': 3,
-                     'wearing': 88,
-                     'showing': 105,
-                     'face': 1126,
-                     'comes': 92,
-                     'mistaken': 60,
-                     'resolve': 15,
-                     'doubts': 40,
-                     'sharp': 84,
-                     'sound': 220,
-                     'horses': 263,
-                     'hoofs': 25,
-                     'grating': 11,
-                     'wheels': 48,
-                     'curb': 5,
-                     'followed': 330,
-                     'pull': 24,
-                     'whistled': 14,
-                     'pair': 41,
-                     'yes': 689,
-                     'continued': 292,
-                     'glancing': 99,
-                     'window': 187,
-                     'nice': 54,
-                     'brougham': 5,
-                     'beauties': 3,
-                     'hundred': 230,
-                     'fifty': 95,
-                     'guineas': 4,
-                     'apiece': 8,
-                     'money': 327,
-                     'nothing': 647,
-                     'else': 202,
-                     'better': 267,
-                     'bit': 64,
-                     'doctor': 184,
-                     'stay': 75,
-                     'lost': 225,
-                     'boswell': 2,
-                     'promises': 16,
-                     'interesting': 72,
-                     'pity': 76,
-                     'miss': 113,
-                     'client': 34,
-                     'want': 324,
-                     'sit': 90,
-                     'best': 269,
-                     'slow': 66,
-                     'step': 140,
-                     'stairs': 32,
-                     'passage': 111,
-                     'paused': 80,
-                     'immediately': 183,
-                     'outside': 111,
-                     'loud': 65,
-                     'authoritative': 3,
-                     'tap': 11,
-                     'come': 935,
-                     'entered': 283,
-                     'less': 368,
-                     'feet': 180,
-                     'inches': 17,
-                     'height': 37,
-                     'limbs': 68,
-                     'hercules': 5,
-                     'dress': 139,
-                     'rich': 93,
-                     'richness': 3,
-                     'england': 312,
-                     'bad': 156,
-                     'taste': 24,
-                     'bands': 28,
-                     'astrakhan': 2,
-                     'slashed': 4,
-                     'sleeves': 31,
-                     'fronts': 2,
-                     'breasted': 2,
-                     'coat': 173,
-                     'deep': 216,
-                     'cloak': 63,
-                     'thrown': 93,
-                     'shoulders': 126,
-                     'lined': 33,
-                     'flame': 16,
-                     'coloured': 22,
-                     'silk': 51,
-                     'secured': 49,
-                     'neck': 204,
-                     'brooch': 2,
-                     'consisted': 39,
-                     'single': 174,
-                     'flaming': 9,
-                     'boots': 92,
-                     'extended': 76,
-                     'halfway': 20,
-                     'calves': 4,
-                     'trimmed': 9,
-                     'tops': 4,
-                     'fur': 39,
-                     'completed': 26,
-                     'impression': 68,
-                     'barbaric': 3,
-                     'opulence': 4,
-                     'suggested': 70,
-                     'appearance': 136,
-                     'carried': 283,
-                     'broad': 93,
-                     'brimmed': 5,
-                     'hand': 835,
-                     'wore': 59,
-                     'upper': 131,
-                     'extending': 36,
-                     'past': 224,
-                     'cheekbones': 5,
-                     'vizard': 2,
-                     'apparently': 69,
-                     'raised': 213,
-                     'lower': 197,
-                     'appeared': 198,
-                     'hanging': 43,
-                     'straight': 125,
-                     'chin': 31,
-                     'suggestive': 12,
-                     'resolution': 58,
-                     'pushed': 82,
-                     'length': 64,
-                     'obstinacy': 8,
-                     'harsh': 23,
-                     'voice': 463,
-                     'strongly': 42,
-                     'marked': 139,
-                     'accent': 19,
-                     'uncertain': 31,
-                     'pray': 80,
-                     'seat': 171,
-                     'colleague': 8,
-                     'dr': 49,
-                     'occasionally': 90,
-                     'cases': 454,
-                     'whom': 490,
-                     'honour': 17,
-                     'count': 749,
-                     'von': 12,
-                     'kramm': 3,
-                     'nobleman': 12,
-                     'understand': 413,
-                     'discretion': 14,
-                     'trust': 69,
-                     'extreme': 73,
-                     'prefer': 22,
-                     'communicate': 16,
-                     'alone': 338,
-                     'rose': 244,
-                     'caught': 91,
-                     'wrist': 69,
-                     'back': 747,
-                     'chair': 136,
-                     'none': 111,
-                     'say': 756,
-                     'anything': 380,
-                     'shrugged': 36,
-                     'begin': 98,
-                     'binding': 19,
-                     'absolute': 57,
-                     'secrecy': 19,
-                     'years': 572,
-                     'end': 466,
-                     'present': 330,
-                     'weight': 71,
-                     'influence': 139,
-                     'european': 100,
-                     'history': 440,
-                     'promise': 68,
-                     'excuse': 54,
-                     'strange': 221,
-                     'august': 71,
-                     'person': 186,
-                     'employs': 3,
-                     'wishes': 43,
-                     'agent': 26,
-                     'unknown': 88,
-                     'confess': 37,
-                     'once': 570,
-                     'called': 451,
-                     'exactly': 48,
-                     'aware': 53,
-                     'dryly': 6,
-                     'circumstances': 108,
-                     'delicacy': 12,
-                     'precaution': 10,
-                     'taken': 439,
-                     'quench': 4,
-                     'grow': 75,
-                     'seriously': 64,
-                     'compromise': 72,
-                     'families': 46,
-                     'speak': 256,
-                     'plainly': 40,
-                     'implicates': 6,
-                     'house': 662,
-                     'ormstein': 3,
-                     'hereditary': 15,
-                     'kings': 28,
-                     'murmured': 19,
-                     'settling': 17,
-                     'closing': 36,
-                     'glanced': 177,
-                     {\ldots}\})
+{\color{outcolor}Out[{\color{outcolor}6}]:} ['阿里巴巴',
+         '集团',
+         '昨日',
+         '宣布',
+         '，',
+         '将',
+         '在',
+         '集团',
+         '管理',
+         '层面',
+         '设立',
+         '首席',
+         '数据',
+         '官',
+         '岗位',
+         '（',
+         'Ｃ',
+         'ｈ',
+         'ｉ',
+         'ｅ']
 \end{Verbatim}
             
-    \subsubsection{编辑距离:}\label{ux7f16ux8f91ux8dddux79bb}
-
-两个词之间的编辑距离定义为使用了几次插入(在词中插入一个单字母),
-删除(删除一个单字母), 交换(交换相邻两个字母),
-替换(把一个字母换成另一个)的操作从一个词变到另一个词.
-
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{}返回所有与单词 w 编辑距离为 1 的集合}
-        \PY{k}{def} \PY{n+nf}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{word}\PY{p}{)}
-            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{]} \PY{o}{+}                     \PY{c+c1}{\PYZsh{} deletion}
-                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{2}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]} \PY{o}{+} \PY{c+c1}{\PYZsh{} transposition}
-                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{c}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]} \PY{o}{+} \PY{c+c1}{\PYZsh{} alteration}
-                       \PY{p}{[}\PY{n}{word}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{:}\PY{n}{i}\PY{p}{]}\PY{o}{+}\PY{n}{c}\PY{o}{+}\PY{n}{word}\PY{p}{[}\PY{n}{i}\PY{p}{:}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{alphabet}\PY{p}{]}\PY{p}{)}  \PY{c+c1}{\PYZsh{} insertion}
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{df\PYZus{}content}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{content\PYZus{}S}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{content\PYZus{}S}\PY{p}{\PYZcb{}}\PY{p}{)}
+        \PY{n}{df\PYZus{}content}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:}                                            content\_S
+        0  [经销商, 　, 电话, 　, 试驾, ／, 订车, Ｕ, 憬, 杭州, 滨江区, 江陵, {\ldots}
+        1  [呼叫, 热线, 　, ４, ０, ０, ８, －, １, ０, ０, －, ３, ０, ０{\ldots}
+        2  [Ｍ, Ｉ, Ｎ, Ｉ, 品牌, 在, 二月, 曾经, 公布, 了, 最新, 的, Ｍ, Ｉ{\ldots}
+        3  [清仓, 大, 甩卖, ！, 一汽, 夏利, Ｎ, ５, 、, 威志, Ｖ, ２, 低至, {\ldots}
+        4  [在, 今年, ３, 月, 的, 日内瓦, 车展, 上, ，, 我们, 见到, 了, 高尔夫{\ldots}
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} load stopword as df}
+        \PY{n}{stopwords} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./resources/stopwords.txt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{n}{index\PYZus{}col}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+            \PY{n}{sep}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}t}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+            \PY{n}{quoting}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,}
+            \PY{n}{names}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopword}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+            \PY{n}{encoding}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{utf\PYZhy{}8}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{stopwords}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:}   stopword
+        0        !
+        1        "
+        2        \#
+        3        \$
+        4        \%
+        5        \&
+        6        '
+        7        (
+        8        )
+        9        *
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{k}{def} \PY{n+nf}{drop\PYZus{}stopwords}\PY{p}{(}\PY{n}{contents}\PY{p}{,}\PY{n}{stopwords}\PY{p}{)}\PY{p}{:}
+            \PY{n}{contents\PYZus{}clean} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{n}{all\PYZus{}words} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+            \PY{k}{for} \PY{n}{line} \PY{o+ow}{in} \PY{n}{contents}\PY{p}{:}
+                \PY{n}{line\PYZus{}clean} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+                \PY{k}{for} \PY{n}{word} \PY{o+ow}{in} \PY{n}{line}\PY{p}{:}
+                    \PY{k}{if} \PY{n}{word} \PY{o+ow}{in} \PY{n}{stopwords}\PY{p}{:}
+                        \PY{k}{continue}
+                    \PY{n}{line\PYZus{}clean}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{word}\PY{p}{)} 
+                    \PY{n}{all\PYZus{}words}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n+nb}{str}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{)} \PY{c+c1}{\PYZsh{} bag of words}
+                \PY{n}{contents\PYZus{}clean}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{line\PYZus{}clean}\PY{p}{)}
+            \PY{k}{return} \PY{n}{contents\PYZus{}clean}\PY{p}{,}\PY{n}{all\PYZus{}words}
         
-        \PY{c+c1}{\PYZsh{} 与 something 编辑距离为2的单词居然达到了 114,324 个}
-        \PY{c+c1}{\PYZsh{} 优化:在这些编辑距离小于2的词中间, 只把那些正确的词作为候选词,只能返回 3 个单词: ‘smoothing’, ‘something’ 和 ‘soothing’}
+        \PY{n}{contents} \PY{o}{=} \PY{n}{df\PYZus{}content}\PY{o}{.}\PY{n}{content\PYZus{}S}\PY{o}{.}\PY{n}{values}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}    
+        \PY{n}{stopwords} \PY{o}{=} \PY{n}{stopwords}\PY{o}{.}\PY{n}{stopword}\PY{o}{.}\PY{n}{values}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+        \PY{n}{contents\PYZus{}clean}\PY{p}{,}\PY{n}{all\PYZus{}words} \PY{o}{=} \PY{n}{drop\PYZus{}stopwords}\PY{p}{(}\PY{n}{contents}\PY{p}{,}\PY{n}{stopwords}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{}返回所有与单词 w 编辑距离为 2 的集合}
-        \PY{c+c1}{\PYZsh{}在这些编辑距离小于2的词中间, 只把那些正确的词作为候选词}
-        \PY{k}{def} \PY{n+nf}{edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{e2} \PY{k}{for} \PY{n}{e1} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{k}{for} \PY{n}{e2} \PY{o+ow}{in} \PY{n}{edits1}\PY{p}{(}\PY{n}{e1}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{df\PYZus{}content}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{contents\PYZus{}clean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{contents\PYZus{}clean}\PY{p}{\PYZcb{}}\PY{p}{)}
+         \PY{n}{df\PYZus{}content}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
-    正常来说把一个元音拼成另一个的概率要大于辅音 (因为人常常把 hello 打成
-hallo 这样); 把单词的第一个字母拼错的概率会相对小,
-等等.但是为了简单起见, 选择了一个简单的方法:
-编辑距离为1的正确单词比编辑距离为2的优先级高,
-而编辑距离为0的正确单词优先级比编辑距离为1的高.
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:}                                       contents\_clean
+         0  [经销商, 电话, 试驾, 订车, Ｕ, 憬, 杭州, 滨江区, 江陵, 路, 号, 转, {\ldots}
+         1  [呼叫, 热线, 服务, 邮箱, ｋ, ｆ, ｐ, ｅ, ｏ, ｐ, ｌ, ｅ, ｄ, ａ,{\ldots}
+         2  [Ｍ, Ｉ, Ｎ, Ｉ, 品牌, 二月, 公布, 最新, Ｍ, Ｉ, Ｎ, Ｉ, 新, 概念{\ldots}
+         3  [清仓, 甩卖, 一汽, 夏利, Ｎ, 威志, Ｖ, 低至, 万, 启新, 中国, 一汽, {\ldots}
+         4  [日内瓦, 车展, 见到, 高尔夫, 家族, 新, 成员, 高尔夫, 敞篷版, 款, 全新,{\ldots}
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{df\PYZus{}all\PYZus{}words}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{all\PYZus{}words}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{all\PYZus{}words}\PY{p}{\PYZcb{}}\PY{p}{)}
+         \PY{n}{df\PYZus{}all\PYZus{}words}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}11}]:}   all\_words
+         0       经销商
+         1        电话
+         2        试驾
+         3        订车
+         4         Ｕ
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{words\PYZus{}count}\PY{o}{=}\PY{n}{df\PYZus{}all\PYZus{}words}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{all\PYZus{}words}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{all\PYZus{}words}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{agg}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{n}{np}\PY{o}{.}\PY{n}{size}\PY{p}{\PYZcb{}}\PY{p}{)} \PY{c+c1}{\PYZsh{}bag of words}
+         \PY{c+c1}{\PYZsh{} reset\PYZus{}index: ranking the table according to ..}
+         \PY{n}{words\PYZus{}count}\PY{o}{=}\PY{n}{words\PYZus{}count}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{count}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,}\PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)} \PY{c+c1}{\PYZsh{}term\PYZhy{}frequency}
+         \PY{n}{words\PYZus{}count}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{k}{def} \PY{n+nf}{known}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n+nb}{set}\PY{p}{(}\PY{n}{w} \PY{k}{for} \PY{n}{w} \PY{o+ow}{in} \PY{n}{words} \PY{k}{if} \PY{n}{w} \PY{o+ow}{in} \PY{n}{NWORDS}\PY{p}{)}
-        
-        \PY{c+c1}{\PYZsh{}如果known(set)非空, candidate 就会选取这个集合, 而不继续计算后面的}
-        \PY{k}{def} \PY{n+nf}{correct}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{:}
-            \PY{n}{candidates} \PY{o}{=} \PY{n}{known}\PY{p}{(}\PY{p}{[}\PY{n}{word}\PY{p}{]}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known}\PY{p}{(}\PY{n}{edits1}\PY{p}{(}\PY{n}{word}\PY{p}{)}\PY{p}{)} \PY{o+ow}{or} \PY{n}{known\PYZus{}edits2}\PY{p}{(}\PY{n}{word}\PY{p}{)} \PY{o+ow}{or} \PY{p}{[}\PY{n}{word}\PY{p}{]}
-            \PY{k}{return} \PY{n+nb}{max}\PY{p}{(}\PY{n}{candidates}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{k}{lambda} \PY{n}{w}\PY{p}{:} \PY{n}{NWORDS}\PY{p}{[}\PY{n}{w}\PY{p}{]}\PY{p}{)}
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/ipykernel\_launcher.py:1: FutureWarning: using a dict on a Series for aggregation
+is deprecated and will be removed in a future version
+  """Entry point for launching an IPython kernel.
+
+    \end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:}        all\_words  count
+         4077           中   5199
+         4209          中国   3115
+         88255          说   3055
+         104747         Ｓ   2646
+         1373           万   2390
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+         \PY{k+kn}{from} \PY{n+nn}{wordcloud} \PY{k}{import} \PY{n}{WordCloud}
+         \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+         \PY{k+kn}{import} \PY{n+nn}{matplotlib}
+         
+         \PY{n}{matplotlib}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{figure.figsize}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{l+m+mf}{10.0}\PY{p}{,} \PY{l+m+mf}{5.0}\PY{p}{)}
+         
+         \PY{n}{wordcloud}\PY{o}{=}\PY{n}{WordCloud}\PY{p}{(}\PY{n}{font\PYZus{}path}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./resources/simhei.ttf}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{background\PYZus{}color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{white}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}\PY{n}{max\PYZus{}font\PYZus{}size}\PY{o}{=}\PY{l+m+mi}{80}\PY{p}{)}
+         \PY{n}{word\PYZus{}frequence} \PY{o}{=} \PY{p}{\PYZob{}}\PY{n}{x}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:}\PY{n}{x}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{words\PYZus{}count}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{100}\PY{p}{)}\PY{o}{.}\PY{n}{values}\PY{p}{\PYZcb{}}
+         \PY{n}{wordcloud}\PY{o}{=}\PY{n}{wordcloud}\PY{o}{.}\PY{n}{fit\PYZus{}words}\PY{p}{(}\PY{n}{word\PYZus{}frequence}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{wordcloud}\PY{p}{)}
 \end{Verbatim}
 
 
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:} <matplotlib.image.AxesImage at 0x1238cc390>
+\end{Verbatim}
+            
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{TF\_IDF}\label{tf_idf}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{k+kn}{import} \PY{n+nn}{jieba}\PY{n+nn}{.}\PY{n+nn}{analyse}
+         \PY{n}{index} \PY{o}{=} \PY{l+m+mi}{1024}
+         \PY{n+nb}{print} \PY{p}{(}\PY{n}{df\PYZus{}news}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{content}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{n}{index}\PY{p}{]}\PY{p}{)}
+         \PY{n}{content\PYZus{}S\PYZus{}str} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{content\PYZus{}S}\PY{p}{[}\PY{n}{index}\PY{p}{]}\PY{p}{)}  
+         \PY{n+nb}{print} \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{  }\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{jieba}\PY{o}{.}\PY{n}{analyse}\PY{o}{.}\PY{n}{extract\PYZus{}tags}\PY{p}{(}\PY{n}{content\PYZus{}S\PYZus{}str}\PY{p}{,} \PY{n}{topK}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,} \PY{n}{withWeight}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+据国外媒体报道，英特尔董事会今日宣布了最新季度派息消息，此次股息为每股普通股２２．５美分（年化股息为每股９０美分），股权登记日为２０１２年８月７日，股息派发日为２０１２年９月１日。Ｓ⑻囟为计算机创新领域的全球领先者，它设计和生产的芯片是全球计算设备的基础。
+股息  美分  每股  年化  日为
+
+    \end{Verbatim}
+
+    \subsubsection{LDA}\label{lda}
+
+In natural language processing, latent Dirichlet allocation (LDA) is a
+generative statistical model that allows sets of observations to be
+explained by unobserved groups that explain why some parts of the data
+are similar. For example, if observations are words collected into
+documents, it posits that each document is a mixture of a small number
+of topics and that each word's creation is attributable to one of the
+document's topics. 格式要求：list of list形式，分词好的的整个语料
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{k+kn}{from} \PY{n+nn}{gensim} \PY{k}{import} \PY{n}{corpora}\PY{p}{,} \PY{n}{models}\PY{p}{,} \PY{n}{similarities}
+         \PY{k+kn}{import} \PY{n+nn}{gensim}
+         \PY{c+c1}{\PYZsh{}做映射，相当于词袋}
+         \PY{n}{dictionary} \PY{o}{=} \PY{n}{corpora}\PY{o}{.}\PY{n}{Dictionary}\PY{p}{(}\PY{n}{contents\PYZus{}clean}\PY{p}{)}
+         \PY{n}{corpus} \PY{o}{=} \PY{p}{[}\PY{n}{dictionary}\PY{o}{.}\PY{n}{doc2bow}\PY{p}{(}\PY{n}{sentence}\PY{p}{)} \PY{k}{for} \PY{n}{sentence} \PY{o+ow}{in} \PY{n}{contents\PYZus{}clean}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{lda} \PY{o}{=} \PY{n}{gensim}\PY{o}{.}\PY{n}{models}\PY{o}{.}\PY{n}{ldamodel}\PY{o}{.}\PY{n}{LdaModel}\PY{p}{(}\PY{n}{corpus}\PY{o}{=}\PY{n}{corpus}\PY{p}{,} \PY{n}{id2word}\PY{o}{=}\PY{n}{dictionary}\PY{p}{,} \PY{n}{num\PYZus{}topics}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{)} \PY{c+c1}{\PYZsh{}类似Kmeans自己指定K值}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{c+c1}{\PYZsh{}一号分类结果}
+         \PY{n+nb}{print} \PY{p}{(}\PY{n}{lda}\PY{o}{.}\PY{n}{print\PYZus{}topic}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{topn}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.009*"万" + 0.006*"号" + 0.004*"转" + 0.003*"Ｖ" + 0.003*"Ｓ"
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{k}{for} \PY{n}{topic} \PY{o+ow}{in} \PY{n}{lda}\PY{o}{.}\PY{n}{print\PYZus{}topics}\PY{p}{(}\PY{n}{num\PYZus{}topics}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{num\PYZus{}words}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print} \PY{p}{(}\PY{n}{topic}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.006*"中" + 0.005*"该剧" + 0.004*"官兵" + 0.003*"撒" + 0.003*"肌肤"
+0.009*"万" + 0.006*"号" + 0.004*"转" + 0.003*"Ｖ" + 0.003*"Ｓ"
+0.008*"节目" + 0.005*"演员" + 0.005*"中" + 0.005*"主持人" + 0.004*"粉丝"
+0.005*"中" + 0.004*"说" + 0.004*"音乐" + 0.003*"发展" + 0.003*"中国"
+0.013*"电影" + 0.008*"观众" + 0.007*"中" + 0.007*"导演" + 0.006*"影片"
+0.022*"ａ" + 0.019*"ｅ" + 0.017*"ｉ" + 0.015*"ｏ" + 0.014*"ｎ"
+0.005*"中" + 0.004*"说" + 0.003*"考生" + 0.003*"唱" + 0.002*"祝福"
+0.011*"卫视" + 0.006*"万" + 0.005*"号" + 0.002*"睫毛" + 0.002*"转"
+0.005*"说" + 0.004*"中" + 0.003*"恋情" + 0.003*"学生" + 0.003*"中国"
+0.006*"中" + 0.005*"皮肤" + 0.004*"Ｍ" + 0.004*"肌肤" + 0.004*"Ｓ"
+0.013*"男人" + 0.009*"女人" + 0.005*"中" + 0.004*"说" + 0.003*"女性"
+0.004*"中" + 0.004*"文化" + 0.004*"说" + 0.003*"导演" + 0.003*"电影"
+0.005*"中" + 0.005*"说" + 0.005*"孩子" + 0.004*"老公" + 0.004*"男人"
+0.009*"考生" + 0.005*"中" + 0.004*"中国" + 0.002*"说" + 0.002*"北京"
+0.007*"比赛" + 0.005*"中" + 0.005*"中国" + 0.004*"说" + 0.004*"意大利"
+0.009*"球队" + 0.009*"中" + 0.007*"选手" + 0.006*"饰演" + 0.004*"角色"
+0.007*"比赛" + 0.004*"专辑" + 0.004*"中" + 0.003*"北京" + 0.003*"说"
+0.006*"张绍" + 0.004*"职场" + 0.004*"中" + 0.003*"万" + 0.003*"毕业生"
+0.005*"中国" + 0.004*"工作" + 0.003*"孩子" + 0.003*"中" + 0.003*"Ｐ"
+0.005*"中" + 0.004*"说" + 0.003*"爱情" + 0.002*"孩子" + 0.002*"Ｐ"
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{df\PYZus{}train}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{contents\PYZus{}clean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{contents\PYZus{}clean}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{label}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{n}{df\PYZus{}news}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{category}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{\PYZcb{}}\PY{p}{)}
+         \PY{n}{df\PYZus{}train}\PY{o}{.}\PY{n}{tail}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:}                                          contents\_clean label
+         4995  [天气, 炎热, 补水, 变得, 美国, 跑步, 世界, 杂志, 报道, 喝水, 身体, 补{\ldots}    时尚
+         4996  [不想, 说, 话, 刺激, 说, 做, 只能, 走, 离开, 伤心地, 想起, 一句, 话{\ldots}    时尚
+         4997  [岁, 刘晓庆, 最新, 嫩照, Ｏ, 衷, 诘, 牧跸, 庆, 看不出, 岁, 秒杀, 刘{\ldots}    时尚
+         4998  [导语, 做, 爸爸, 一种, 幸福, 无论是, 领养, 亲生, 更何况, 影视剧, 中, {\ldots}    时尚
+         4999  [全球, 最美, 女人, 合成图, 国, 整形外科, 教授, 李承哲, 国际, 学术, 杂志{\ldots}    时尚
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{df\PYZus{}train}\PY{o}{.}\PY{n}{label}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}20}]:} array(['汽车', '财经', '科技', '健康', '体育', '教育', '文化', '军事', '娱乐', '时尚'], dtype=object)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{label\PYZus{}mapping} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{汽车}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{财经}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{科技}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{健康}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{体育}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{教育}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{6}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{文化}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{7}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{军事}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{8}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{娱乐}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{9}\PY{p}{,}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{时尚}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{0}\PY{p}{\PYZcb{}}
+         \PY{n}{df\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{label}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{label}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{map}\PY{p}{(}\PY{n}{label\PYZus{}mapping}\PY{p}{)}
+         \PY{n}{df\PYZus{}train}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}21}]:}                                       contents\_clean  label
+         0  [经销商, 电话, 试驾, 订车, Ｕ, 憬, 杭州, 滨江区, 江陵, 路, 号, 转, {\ldots}      1
+         1  [呼叫, 热线, 服务, 邮箱, ｋ, ｆ, ｐ, ｅ, ｏ, ｐ, ｌ, ｅ, ｄ, ａ,{\ldots}      1
+         2  [Ｍ, Ｉ, Ｎ, Ｉ, 品牌, 二月, 公布, 最新, Ｍ, Ｉ, Ｎ, Ｉ, 新, 概念{\ldots}      1
+         3  [清仓, 甩卖, 一汽, 夏利, Ｎ, 威志, Ｖ, 低至, 万, 启新, 中国, 一汽, {\ldots}      1
+         4  [日内瓦, 车展, 见到, 高尔夫, 家族, 新, 成员, 高尔夫, 敞篷版, 款, 全新,{\ldots}      1
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+         
+         \PY{n}{x\PYZus{}train}\PY{p}{,} \PY{n}{x\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+             \PY{n}{df\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{contents\PYZus{}clean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}\PY{p}{,}
+             \PY{n}{df\PYZus{}train}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{label}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{values}\PY{p}{,}
+             \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{c+c1}{\PYZsh{}x\PYZus{}train = x\PYZus{}train.flatten()}
+         \PY{n}{x\PYZus{}train}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}23}]:} '上海'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{words} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{line\PYZus{}index} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{k}{try}\PY{p}{:}
+                 \PY{c+c1}{\PYZsh{}x\PYZus{}train[line\PYZus{}index][word\PYZus{}index] = str(x\PYZus{}train[line\PYZus{}index][word\PYZus{}index])}
+                 \PY{n}{words}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{x\PYZus{}train}\PY{p}{[}\PY{n}{line\PYZus{}index}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             \PY{k}{except}\PY{p}{:}
+                 \PY{n+nb}{print} \PY{p}{(}\PY{n}{line\PYZus{}index}\PY{p}{,}\PY{n}{word\PYZus{}index}\PY{p}{)}
+         \PY{n}{words}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} 
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:} '中新网 上海 日电 于俊 父亲节 网络 吃 一顿 电影 快餐 微 电影 爸 对不起 我爱你 定于 本月 父亲节 当天 各大 视频 网站 首映 葜 谱 鞣 剑 保慈 障蚣 钦 呓 樯 埽 ⒌ 缬 埃 ǎ 停 椋 悖 颍 铩 妫 椋 恚 称 微型 电影 新 媒体 平台 播放 状态 短时 休闲 状态 观看 完整 策划 系统 制作 体系 支持 显示 较完整 故事情节 电影 微 超短 放映 微 周期 制作 天 数周 微 规模 投资 人民币 几千 数万元 每部 内容 融合 幽默 搞怪 时尚 潮流 人文 言情 公益 教育 商业 定制 主题 单独 成篇 系列 成剧 唇 开播 微 电影 爸 对不起 我爱你 讲述 一对 父子 观念 缺少 沟通 导致 关系 父亲 传统 固执 钟情 传统 生活 方式 儿子 新派 音乐 达 习惯 晚出 早 生活 性格 张扬 叛逆 两种 截然不同 生活 方式 理念 差异 一场 父子 间 拉开序幕 子 失手 打破 父亲 心爱 物品 父亲 赶出 家门 剧情 演绎 父亲节 妹妹 哥哥 化解 父亲 这场 矛盾 映逋坏 嚼 斫 狻 ⒍ 粤 ⒌ 桨容 争执 退让 传统 尴尬 父子 尴尬 情 男人 表达 心中 那份 感恩 一杯 滤挂 咖啡 父亲节 变得 温馨 镁 缬 缮 虾 Ｎ 逄 煳 幕 传播 迪欧 咖啡 联合 出品 出品人 希望 观摩 扪心自问 父亲节 父亲 记得 父亲 生日 哪一天 父亲 爱喝 跨出 家门 那一刻 感觉 一颗 颤动 心 操劳 天下 儿女 父亲节 大声 喊出 父亲 家人 爱 完'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n+nb}{print} \PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+3750
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction}\PY{n+nn}{.}\PY{n+nn}{text} \PY{k}{import} \PY{n}{CountVectorizer}
+         \PY{n}{texts} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dog cat fish}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dog cat cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{fish bird}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bird}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{cv} \PY{o}{=} \PY{n}{CountVectorizer}\PY{p}{(}\PY{p}{)}
+         \PY{n}{cv\PYZus{}fit} \PY{o}{=} \PY{n}{cv}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{texts}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv}\PY{o}{.}\PY{n}{get\PYZus{}feature\PYZus{}names}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv\PYZus{}fit}\PY{o}{.}\PY{n}{toarray}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv\PYZus{}fit}\PY{o}{.}\PY{n}{toarray}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+['bird', 'cat', 'dog', 'fish']
+[[0 1 1 1]
+ [0 2 1 0]
+ [1 0 0 1]
+ [1 0 0 0]]
+[2 3 2 2]
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction}\PY{n+nn}{.}\PY{n+nn}{text} \PY{k}{import} \PY{n}{CountVectorizer}
+         \PY{n}{texts} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dog cat fish}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{dog cat cat}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{fish bird}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bird}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{cv} \PY{o}{=} \PY{n}{CountVectorizer}\PY{p}{(}\PY{n}{ngram\PYZus{}range}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+         \PY{n}{cv\PYZus{}fit} \PY{o}{=} \PY{n}{cv}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{texts}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv}\PY{o}{.}\PY{n}{get\PYZus{}feature\PYZus{}names}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv\PYZus{}fit}\PY{o}{.}\PY{n}{toarray}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{cv\PYZus{}fit}\PY{o}{.}\PY{n}{toarray}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+['bird', 'cat', 'cat cat', 'cat fish', 'dog', 'dog cat', 'dog cat cat', 'dog cat fish', 'fish', 'fish bird']
+[[0 1 0 1 1 1 0 1 1 0]
+ [0 2 1 0 1 1 1 0 0 0]
+ [1 0 0 0 0 0 0 0 1 1]
+ [1 0 0 0 0 0 0 0 0 0]]
+[2 3 1 1 2 2 1 1 2 1]
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction}\PY{n+nn}{.}\PY{n+nn}{text} \PY{k}{import} \PY{n}{CountVectorizer}
+         
+         \PY{n}{vec} \PY{o}{=} \PY{n}{CountVectorizer}\PY{p}{(}\PY{n}{analyzer}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{word}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{max\PYZus{}features}\PY{o}{=}\PY{l+m+mi}{4000}\PY{p}{,} \PY{n}{lowercase}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+         \PY{n}{vec}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{words}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}28}]:} CountVectorizer(analyzer='word', binary=False, decode\_error='strict',
+                 dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+                 lowercase=False, max\_df=1.0, max\_features=4000, min\_df=1,
+                 ngram\_range=(1, 1), preprocessor=None, stop\_words=None,
+                 strip\_accents=None, token\_pattern='(?u)\textbackslash{}\textbackslash{}b\textbackslash{}\textbackslash{}w\textbackslash{}\textbackslash{}w+\textbackslash{}\textbackslash{}b',
+                 tokenizer=None, vocabulary=None)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{naive\PYZus{}bayes} \PY{k}{import} \PY{n}{MultinomialNB}
+         \PY{n}{classifier} \PY{o}{=} \PY{n}{MultinomialNB}\PY{p}{(}\PY{p}{)}
+         \PY{n}{classifier}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{vec}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} MultinomialNB(alpha=1.0, class\_prior=None, fit\_prior=True)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{test\PYZus{}words} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{line\PYZus{}index} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{k}{try}\PY{p}{:}
+                 \PY{c+c1}{\PYZsh{}x\PYZus{}train[line\PYZus{}index][word\PYZus{}index] = str(x\PYZus{}train[line\PYZus{}index][word\PYZus{}index])}
+                 \PY{n}{test\PYZus{}words}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ }\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{x\PYZus{}test}\PY{p}{[}\PY{n}{line\PYZus{}index}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+             \PY{k}{except}\PY{p}{:}
+                  \PY{n+nb}{print} \PY{p}{(}\PY{n}{line\PYZus{}index}\PY{p}{,}\PY{n}{word\PYZus{}index}\PY{p}{)}
+         \PY{n}{test\PYZus{}words}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}30}]:} '国家 公务员 考试 申论 应用文 类 试题 实质 一道 集 概括 分析 提出 解决问题 一体 综合性 试题 说 一道 客观 凝练 申发 论述 文章 题目 分析 历年 国考 申论 真题 公文 类 试题 类型 多样 包括 公文 类 事务性 文书 类 题材 从题 干 作答 材料 内容 整合 分析 无需 太 创造性 发挥 纵观 历年 申论 真题 作答 应用文 类 试题 文种 格式 作出 特别 重在 内容 考查 行文 格式 考生 平常心 面对 应用文 类 试题 准确 把握 作答 领会 内在 含义 把握 题材 主旨 材料 结构 轻松 应对 应用文 类 试题 Ｒ 弧 ⒆ 钒 盐 展文 写作 原则 Ｔ 材料 中来 应用文 类 试题 材料 总体 把握 客观 考生 材料 中来 材料 中 把握 材料 准确 理解 题材 主旨 Ｔ 政府 角度 作答 应用文 类 试题 更应 注重 政府 角度 观点 政府 角度 出发 原则 表述 观点 提出 解决 之策 考生 作答 站 政府 人员 角度 看待 提出 解决问题 Ｔ 文体 结构 形式 考查 重点 文体 结构 大部分 评分 关键点 解答 方法 薄 ⒆ ス 丶 词 明 方向 作答 题目 题干 作答 作答 方向 作答 角度 关键 向导 考生 仔细阅读 题干 作答 抓住 关键词 作答 方向 相关 要点 整理 作答 思路 年国考 地市级 真 题为 例 潦惺姓 府 宣传 推进 近海 水域 污染 整治 工作 请 给定 资料 市政府 工作人员 身份 草拟 一份 宣传 纲要 Ｒ 求 保对 宣传 内容 要点 提纲挈领 陈述 玻 体现 政府 精神 全市 各界 关心 支持 污染 整治 工作 通俗易懂 超过 字 肮 丶 词 近海 水域 污染 整治 工作 市政府 工作人员 身份 宣传 纲要 提纲挈领 陈述 体现 政府 精神 全市 各界 关心 支持 污染 整治 工作 通俗易懂 提示 归结 作答 要点 包括 污染 情况 原因 解决 对策 作答 思路 情况 原因 对策 意义 逻辑 顺序 安排 文章 结构 病 ⒋ 缶殖 龇 ⅲ 明 结构 解答 应用文 类 试题 考生 材料 整体 出发 大局 出发 高屋建瓴 把握 材料 主题 思想 事件 起因 解决 对策 阅读文章 构建 文章 结构 直至 快速 解答 场 ⒗ 硭 乘悸 罚明 逻辑 应用文 类 试题 严密 逻辑思维 情况 原因 对策 意义 考生 作答 先 弄清楚 解答 思路 统筹安排 脉络 清晰 逻辑 表达 内容 表述 础 把握 明 详略 考生 仔细阅读 分析 揣摩 应用文 类 试题 内容 答题 时要 详略 得当 主次 分明 安排 内容 增加 文章 层次感 阅卷 老师 阅卷 时能 明白 清晰 一目了然 玻埃 保蹦旯 考 考试 申论 试卷 分为 省级 地市级 两套 试卷 能力 大有 省级 申论 试题 考生 宏观 角度看 注重 深度 广度 考生 深谋远虑 地市级 试题 考生 微观 视角 观察 侧重 考查 解决 能力 考生 贯彻执行 作答 区别对待'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{classifier}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{vec}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{test\PYZus{}words}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}31}]:} 0.80400000000000005
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction}\PY{n+nn}{.}\PY{n+nn}{text} \PY{k}{import} \PY{n}{TfidfVectorizer}
+         
+         \PY{n}{vectorizer} \PY{o}{=} \PY{n}{TfidfVectorizer}\PY{p}{(}\PY{n}{analyzer}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{word}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{max\PYZus{}features}\PY{o}{=}\PY{l+m+mi}{4000}\PY{p}{,}  \PY{n}{lowercase} \PY{o}{=} \PY{k+kc}{False}\PY{p}{)}
+         \PY{n}{vectorizer}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{words}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}32}]:} TfidfVectorizer(analyzer='word', binary=False, decode\_error='strict',
+                 dtype=<class 'numpy.int64'>, encoding='utf-8', input='content',
+                 lowercase=False, max\_df=1.0, max\_features=4000, min\_df=1,
+                 ngram\_range=(1, 1), norm='l2', preprocessor=None, smooth\_idf=True,
+                 stop\_words=None, strip\_accents=None, sublinear\_tf=False,
+                 token\_pattern='(?u)\textbackslash{}\textbackslash{}b\textbackslash{}\textbackslash{}w\textbackslash{}\textbackslash{}w+\textbackslash{}\textbackslash{}b', tokenizer=None, use\_idf=True,
+                 vocabulary=None)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{naive\PYZus{}bayes} \PY{k}{import} \PY{n}{MultinomialNB}
+         \PY{n}{classifier} \PY{o}{=} \PY{n}{MultinomialNB}\PY{p}{(}\PY{p}{)}
+         \PY{n}{classifier}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{vectorizer}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{words}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}33}]:} MultinomialNB(alpha=1.0, class\_prior=None, fit\_prior=True)
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{classifier}\PY{o}{.}\PY{n}{score}\PY{p}{(}\PY{n}{vectorizer}\PY{o}{.}\PY{n}{transform}\PY{p}{(}\PY{n}{test\PYZus{}words}\PY{p}{)}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}34}]:} 0.81520000000000004
+\end{Verbatim}
+            
 
     % Add a bibliography block to the postdoc
     
