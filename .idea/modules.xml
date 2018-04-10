@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../Checkio/.idea/Checkio.iml" filepath="$PROJECT_DIR$/../Checkio/.idea/Checkio.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Machine_Learning.iml" filepath="$PROJECT_DIR$/.idea/Machine_Learning.iml" />
     </modules>
   </component>
