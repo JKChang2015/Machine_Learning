@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{XGBoost}
+    \title{XGBoost Demo}
     
     
     
@@ -280,124 +280,228 @@
     
 
     
-    \section{XGBoost}\label{xgboost}
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{c+c1}{\PYZsh{} First XGBoost model for Pima Indians dataset}
+        \PY{k+kn}{import} \PY{n+nn}{xgboost}
+        \PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k}{import} \PY{n}{loadtxt}
+        \PY{k+kn}{from} \PY{n+nn}{xgboost} \PY{k}{import} \PY{n}{XGBClassifier}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{accuracy\PYZus{}score}
+\end{Verbatim}
 
-XGBoost is short for ``Extreme Gradient Boosting'', where the term
-``Gradient Boosting'' is proposed in the paper Greedy Function
-Approximation: A Gradient Boosting Machine, by Friedman. XGBoost is
-based on this original model. This is a tutorial on gradient boosted
-trees, and most of the content is based on these slides by the author of
-xgboost.
 
-    \subsubsection{Loss and Regularization}\label{loss-and-regularization}
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{c+c1}{\PYZsh{} load data}
+        \PY{n}{dataset} \PY{o}{=} \PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pima\PYZhy{}indians\PYZhy{}diabetes.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{delimiter}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} split data into X and y}
+        \PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{n}{Y} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} split data into train and test sets}
+        \PY{n}{seed} \PY{o}{=} \PY{l+m+mi}{7}
+        \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.33}
+        \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}
+            \PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{n}{test\PYZus{}size}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{n}{seed}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} fit model no training data}
+        \PY{n}{model} \PY{o}{=} \PY{n}{XGBClassifier}\PY{p}{(}\PY{p}{)}
+        \PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} make predictions for test data}
+        \PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+        \PY{n}{predictions} \PY{o}{=} \PY{p}{[}\PY{n+nb}{round}\PY{p}{(}\PY{n}{value}\PY{p}{)} \PY{k}{for} \PY{n}{value} \PY{o+ow}{in} \PY{n}{y\PYZus{}pred}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} evaluate predictions}
+        \PY{n}{accuracy} \PY{o}{=} \PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZpc{}.2f}\PY{l+s+si}{\PYZpc{}\PYZpc{}}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{accuracy} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
 
-Based on different understandings of prediction \(y_{i}\) we can have
-different problems, such as regression, classification, ordering, etc.
-We need to find a way to find the best parameters given the training
-data. In order to do so, we need to define a so-called
-\texttt{objective\ function}, to measure the performance of the model
-given a certain set of parameters.
 
-A very important fact about objective functions is they
-\texttt{must\ always} contain two parts: training loss and
-regularization. \[obj(\Theta ) = L(\Theta) + \Omega (\Theta)\]
+    \begin{Verbatim}[commandchars=\\\{\}]
+Accuracy: 77.95\%
 
-\paragraph{\texorpdfstring{1. Loss function (L)
-}{1. Loss function (L)  }}\label{loss-function-l}
+    \end{Verbatim}
 
-The training loss measures how predictive our model is on training data.
-- mean square error(MSE)
-\[L(\Theta) = \sum_{i}^{ }(y_{i} - \widehat{y_{i}})^{2}\]
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/sklearn/preprocessing/label.py:151: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if diff:
 
-\begin{itemize}
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k}{import} \PY{n}{loadtxt}
+        \PY{k+kn}{from} \PY{n+nn}{xgboost} \PY{k}{import} \PY{n}{XGBClassifier}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{accuracy\PYZus{}score}
+        \PY{c+c1}{\PYZsh{} load data}
+        \PY{n}{dataset} \PY{o}{=} \PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pima\PYZhy{}indians\PYZhy{}diabetes.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{delimiter}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} split data into X and y}
+        \PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{n}{Y} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} split data into train and test sets}
+        \PY{n}{seed} \PY{o}{=} \PY{l+m+mi}{7}
+        \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.33}
+        \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{n}{test\PYZus{}size}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{n}{seed}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} fit model no training data}
+        \PY{n}{model} \PY{o}{=} \PY{n}{XGBClassifier}\PY{p}{(}\PY{p}{)}
+        \PY{n}{eval\PYZus{}set} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}test}\PY{p}{)}\PY{p}{]}
+        \PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{early\PYZus{}stopping\PYZus{}rounds}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{eval\PYZus{}metric}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{logloss}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{eval\PYZus{}set}\PY{o}{=}\PY{n}{eval\PYZus{}set}\PY{p}{,} \PY{n}{verbose}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} make predictions for test data}
+        \PY{n}{y\PYZus{}pred} \PY{o}{=} \PY{n}{model}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{X\PYZus{}test}\PY{p}{)}
+        \PY{n}{predictions} \PY{o}{=} \PY{p}{[}\PY{n+nb}{round}\PY{p}{(}\PY{n}{value}\PY{p}{)} \PY{k}{for} \PY{n}{value} \PY{o+ow}{in} \PY{n}{y\PYZus{}pred}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} evaluate predictions}
+        \PY{n}{accuracy} \PY{o}{=} \PY{n}{accuracy\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}test}\PY{p}{,} \PY{n}{predictions}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Accuracy: }\PY{l+s+si}{\PYZpc{}.2f}\PY{l+s+si}{\PYZpc{}\PYZpc{}}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{accuracy} \PY{o}{*} \PY{l+m+mf}{100.0}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[0]	validation\_0-logloss:0.660186
+Will train until validation\_0-logloss hasn't improved in 10 rounds.
+[1]	validation\_0-logloss:0.634854
+[2]	validation\_0-logloss:0.612239
+[3]	validation\_0-logloss:0.593118
+[4]	validation\_0-logloss:0.578303
+[5]	validation\_0-logloss:0.564942
+[6]	validation\_0-logloss:0.555113
+[7]	validation\_0-logloss:0.54499
+[8]	validation\_0-logloss:0.539151
+[9]	validation\_0-logloss:0.531819
+[10]	validation\_0-logloss:0.526065
+[11]	validation\_0-logloss:0.51977
+[12]	validation\_0-logloss:0.514979
+[13]	validation\_0-logloss:0.50927
+[14]	validation\_0-logloss:0.506086
+[15]	validation\_0-logloss:0.503565
+[16]	validation\_0-logloss:0.503591
+[17]	validation\_0-logloss:0.500805
+[18]	validation\_0-logloss:0.497605
+[19]	validation\_0-logloss:0.495328
+[20]	validation\_0-logloss:0.494777
+[21]	validation\_0-logloss:0.494274
+[22]	validation\_0-logloss:0.493333
+[23]	validation\_0-logloss:0.492211
+[24]	validation\_0-logloss:0.491936
+[25]	validation\_0-logloss:0.490578
+[26]	validation\_0-logloss:0.490895
+[27]	validation\_0-logloss:0.490646
+[28]	validation\_0-logloss:0.491911
+[29]	validation\_0-logloss:0.491407
+[30]	validation\_0-logloss:0.488828
+[31]	validation\_0-logloss:0.487867
+[32]	validation\_0-logloss:0.487297
+[33]	validation\_0-logloss:0.487562
+[34]	validation\_0-logloss:0.487788
+[35]	validation\_0-logloss:0.487962
+[36]	validation\_0-logloss:0.488218
+[37]	validation\_0-logloss:0.489582
+[38]	validation\_0-logloss:0.489334
+[39]	validation\_0-logloss:0.490969
+[40]	validation\_0-logloss:0.48978
+[41]	validation\_0-logloss:0.490704
+[42]	validation\_0-logloss:0.492369
+Stopping. Best iteration:
+[32]	validation\_0-logloss:0.487297
+
+Accuracy: 78.35\%
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/sklearn/preprocessing/label.py:151: DeprecationWarning: The truth value of an empty array is ambiguous. Returning False, but in future this will result in an error. Use `array.size > 0` to check that an array is not empty.
+  if diff:
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k}{import} \PY{n}{loadtxt}
+        \PY{k+kn}{from} \PY{n+nn}{xgboost} \PY{k}{import} \PY{n}{XGBClassifier}
+        \PY{k+kn}{from} \PY{n+nn}{xgboost} \PY{k}{import} \PY{n}{plot\PYZus{}importance}
+        \PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k}{import} \PY{n}{pyplot}
+        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+        \PY{c+c1}{\PYZsh{} load data}
+        \PY{n}{dataset} \PY{o}{=} \PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pima\PYZhy{}indians\PYZhy{}diabetes.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{delimiter}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} split data into X and y}
+        \PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{n}{y} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} fit model no training data}
+        \PY{n}{model} \PY{o}{=} \PY{n}{XGBClassifier}\PY{p}{(}\PY{p}{)}
+        \PY{n}{model}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} plot feature importance}
+        \PY{n}{plot\PYZus{}importance}\PY{p}{(}\PY{n}{model}\PY{p}{)}
+        \PY{n}{pyplot}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_3_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} Tune learning\PYZus{}rate}
+        \PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k}{import} \PY{n}{loadtxt}
+        \PY{k+kn}{from} \PY{n+nn}{xgboost} \PY{k}{import} \PY{n}{XGBClassifier}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{GridSearchCV}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{StratifiedKFold}
+        \PY{c+c1}{\PYZsh{} load data}
+        \PY{n}{dataset} \PY{o}{=} \PY{n}{loadtxt}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pima\PYZhy{}indians\PYZhy{}diabetes.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{delimiter}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{,}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} split data into X and y}
+        \PY{n}{X} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{:}\PY{l+m+mi}{8}\PY{p}{]}
+        \PY{n}{Y} \PY{o}{=} \PY{n}{dataset}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} grid search}
+        \PY{n}{model} \PY{o}{=} \PY{n}{XGBClassifier}\PY{p}{(}\PY{p}{)}
+        \PY{n}{learning\PYZus{}rate} \PY{o}{=} \PY{p}{[}\PY{l+m+mf}{0.0001}\PY{p}{,} \PY{l+m+mf}{0.001}\PY{p}{,} \PY{l+m+mf}{0.01}\PY{p}{,} \PY{l+m+mf}{0.1}\PY{p}{,} \PY{l+m+mf}{0.2}\PY{p}{,} \PY{l+m+mf}{0.3}\PY{p}{]}
+        \PY{n}{param\PYZus{}grid} \PY{o}{=} \PY{n+nb}{dict}\PY{p}{(}\PY{n}{learning\PYZus{}rate}\PY{o}{=}\PY{n}{learning\PYZus{}rate}\PY{p}{)}
+        \PY{n}{kfold} \PY{o}{=} \PY{n}{StratifiedKFold}\PY{p}{(}\PY{n}{n\PYZus{}splits}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,} \PY{n}{shuffle}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{7}\PY{p}{)}
+        \PY{n}{grid\PYZus{}search} \PY{o}{=} \PY{n}{GridSearchCV}\PY{p}{(}
+            \PY{n}{model}\PY{p}{,} \PY{n}{param\PYZus{}grid}\PY{p}{,} \PY{n}{scoring}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{neg\PYZus{}log\PYZus{}loss}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{n\PYZus{}jobs}\PY{o}{=}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kfold}\PY{p}{)}
+        \PY{n}{grid\PYZus{}result} \PY{o}{=} \PY{n}{grid\PYZus{}search}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{Y}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} summarize results}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Best: }\PY{l+s+si}{\PYZpc{}f}\PY{l+s+s2}{ using }\PY{l+s+si}{\PYZpc{}s}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{grid\PYZus{}result}\PY{o}{.}\PY{n}{best\PYZus{}score\PYZus{}}\PY{p}{,}
+                                     \PY{n}{grid\PYZus{}result}\PY{o}{.}\PY{n}{best\PYZus{}params\PYZus{}}\PY{p}{)}\PY{p}{)}
+        \PY{n}{means} \PY{o}{=} \PY{n}{grid\PYZus{}result}\PY{o}{.}\PY{n}{cv\PYZus{}results\PYZus{}}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{mean\PYZus{}test\PYZus{}score}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{n}{params} \PY{o}{=} \PY{n}{grid\PYZus{}result}\PY{o}{.}\PY{n}{cv\PYZus{}results\PYZus{}}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{params}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{k}{for} \PY{n}{mean}\PY{p}{,} \PY{n}{param} \PY{o+ow}{in} \PY{n+nb}{zip}\PY{p}{(}\PY{n}{means}\PY{p}{,} \PY{n}{params}\PY{p}{)}\PY{p}{:}
+            \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZpc{}f}\PY{l+s+s2}{  with: }\PY{l+s+si}{\PYZpc{}r}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{mean}\PY{p}{,} \PY{n}{param}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Best: -0.483304 using \{'learning\_rate': 0.1\}
+-0.689811  with: \{'learning\_rate': 0.0001\}
+-0.661827  with: \{'learning\_rate': 0.001\}
+-0.531155  with: \{'learning\_rate': 0.01\}
+-0.483304  with: \{'learning\_rate': 0.1\}
+-0.515642  with: \{'learning\_rate': 0.2\}
+-0.554158  with: \{'learning\_rate': 0.3\}
+
+    \end{Verbatim}
+
+    \subsubsection{Parameters}\label{parameters}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  logistic loss for logistic regression
-  \[L(\Theta) =\sum_{i}^{ } [y_{i} ln (1+e^{-\widehat{y_{i}}} ) + (1-y_{i} )ln(1+e^{\widehat{y_{i}}})]\]
-\end{itemize}
+  learning rate
+\item
+  tree max\_depth min\_child\_weight subsample, colsample\_bytree gamma 
+\item
+  正则化参数 lambda alpha
+\end{enumerate}
 
-\paragraph{\texorpdfstring{2. Regularization term
-(\(\Omega\))}{2. Regularization term (\textbackslash{}Omega)}}\label{regularization-term-omega}
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{xgb1} \PY{o}{=} \PY{n}{XGBClassifier}\PY{p}{(}
+         \PY{n}{learning\PYZus{}rate} \PY{o}{=}\PY{l+m+mf}{0.1}\PY{p}{,}
+         \PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{1000}\PY{p}{,}
+         \PY{n}{max\PYZus{}depth}\PY{o}{=}\PY{l+m+mi}{5}\PY{p}{,}
+         \PY{n}{min\PYZus{}child\PYZus{}weight}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+         \PY{n}{gamma}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{,}
+         \PY{n}{subsample}\PY{o}{=}\PY{l+m+mf}{0.8}\PY{p}{,}
+         \PY{n}{colsample\PYZus{}bytree}\PY{o}{=}\PY{l+m+mf}{0.8}\PY{p}{,}
+         \PY{n}{objective}\PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{binary:logistic}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
+         \PY{n}{nthread}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{,}
+         \PY{n}{scale\PYZus{}pos\PYZus{}weight}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,}
+         \PY{n}{seed}\PY{o}{=}\PY{l+m+mi}{27}\PY{p}{)}
+\end{Verbatim}
 
-It controls the complexity of the model, which helps us to avoid
-overfitting.
-
-    \subsubsection{Tree Ensemble}\label{tree-ensemble}
-
-The tree ensemble model is a set of classification and regression trees
-(CART). We classify the elements into different leaves, and assign them
-the score on the corresponding leaf. A CART is a bit different from
-decision trees, where the leaf only contains decision values. In CART, a
-real score is associated with each of the leaves, which gives us richer
-interpretations that go beyond classification. Usually, a single tree is
-not strong enough to be used in practice. What is actually used is the
-so-called tree ensemble model, which sums the prediction of multiple
-trees together.
-
-The prediction scores of each individual tree are summed up to get the
-final score. If you look at the example, an important fact is that the
-two trees try to complement each other. Mathematically, we can write our
-model in the form
-\[\widehat{y_{i}} = \sum_{k=1}^{K}f_{k}(x_{i}), fk\in F \] where K is
-the number of trees, f is a function in the functional space F, and F is
-the set of all possible CARTs. Therefore our objective to optimize can
-be written as
-\[obj(\Theta ) = \sum_{i=1}^{n}(y_{i} , \widehat{y_{i}}) + \sum_{i=1}^{t}\Omega (f_{i})\]
-
-    \subsubsection{Tree Boosting}\label{tree-boosting}
-
-How should we learn the trees? The answer is, as is always for all
-supervised learning models: Define an objective function, and optimize
-it!
-
-Assume we have the following objective function :
-\[obj  = \sum_{i=1}^{n}L(y_{i} , \widehat{y_{i}}^{(t)}) + \sum_{i=1}^{t}\Omega (f_{i})\]
-
-    \subsubsection{Training}\label{training}
-
-\subparagraph{\texorpdfstring{1. What are the parameters of trees?
-}{1. What are the parameters of trees?  }}\label{what-are-the-parameters-of-trees}
-
-Functions \(f_{i}\), with each containing the structure of the tree and
-the leaf scores. This is much harder than traditional optimization
-problem where you can take the gradient and go. It is not easy to train
-all the trees at once. Instead, we use an additive strategy: fix what we
-have learned, and add one new tree at a time.
-
-We write the prediction value at step \texttt{t} as
-\(\widehat{y_{i}}^{(t)}\) :
-
-\[
-{\displaystyle {\begin{aligned}
-\widehat{y_{i}}^{(0)} &= 0 \\
-\widehat{y_{i}}^{(1)} &= f_{1}(x_{i}) = \widehat{y_{i}}^{(0)} + f_{1}(x_{i})\\
-\widehat{y_{i}}^{(2)} &= f_{1}(x_{i}) + f_{2}(x_{i})= \widehat{y_{i}}^{(1)} + f_{2}(x_{i})\\
-&... \\
-\widehat{y_{i}}^{(t)} &= \sum_{k=1}^{t}f_{k}(x_{i}) = \widehat{y_{i}}^{(t-1)} + f_{t}(x_{i}) 
-\end{aligned}}
-}\]
-
-    2. Which tree do we want at each step? A natural thing is to add the one
-that optimizes our objective.
-
-\[
-{\displaystyle {\begin{aligned}
-obj^{(t)} &= \sum_{i=1}^{n} l (y_{i},\widehat{y}_{i}^{(t)}) + \sum_{i=1}^{t}\Omega (f_{i}) \\
-&= \sum_{i=1}^{n} l (y_{i},\widehat{y}_{i}^{(t-1)} + f_{t}(x_{i})) + \Omega (f_{i}) + \mathit{constant} \\
-&= \sum_{i=1}^{n} [ l (y_{i}, \widehat{y}_{i}^{(t-1)}) + g_{i}f_{t}(x_{i}) + \frac{1}{2}h_{i}f_{t}^{2}(x_{i})] + \Omega (f_{t}) + \mathit{constant}
-\end{aligned}}
-}\]
-
-where,
-\[g_{i} = \partial _{\widehat{y}_{i}^{(t-1)}} l( y_{i}, \widehat{y}_{i}^{(t-1)})\]
-\[h_{i} = \partial _{\widehat{y}_{i}^{(t-1)}}^{2} l( y_{i}, \widehat{y}_{i}^{(t-1)})\]
-
-This becomes our optimization goal for the new tree. One important
-advantage of this definition is that it only depends on \(g_{i}\) and
-\(h_{i}\). This is how xgboost can support custom loss functions. We can
-optimize every loss function, including logistic regression and weighted
-logistic regression, using exactly the same solver that takes \(g_{i}\)
-and \(h_{i}\) as input!
 
 
     % Add a bibliography block to the postdoc
