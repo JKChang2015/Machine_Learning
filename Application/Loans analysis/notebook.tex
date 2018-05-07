@@ -1,0 +1,1030 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{ml\_loan}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \section{\texorpdfstring{\href{https://www.lendingclub.com/info/download-data.action}{Lending
+Club
+Statistics}}{Lending Club Statistics}}\label{lending-club-statistics}
+
+Data pre-process
+
+    \subsubsection{1. Data filtering}\label{data-filtering}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/LoanStats3a.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{skiprows}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{half\PYZus{}count} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2}
+        \PY{c+c1}{\PYZsh{} drop null value and some columns}
+        \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{n}{thresh}\PY{o}{=}\PY{n}{half\PYZus{}count}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{desc}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{url}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/loans\PYZus{}2007.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2785: DtypeWarning: Columns (0,47) have mixed types. Specify dtype option on import or set low\_memory=False.
+  interactivity=interactivity, compiler=compiler, result=result)
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./resources/loans\PYZus{}2007.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{}loans\PYZus{}2007.drop\PYZus{}duplicates()}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+id                                1077501
+member\_id                      1.2966e+06
+loan\_amnt                            5000
+funded\_amnt                          5000
+funded\_amnt\_inv                      4975
+term                            36 months
+int\_rate                           10.65\%
+installment                        162.87
+grade                                   B
+sub\_grade                              B2
+emp\_title                             NaN
+emp\_length                      10+ years
+home\_ownership                       RENT
+annual\_inc                          24000
+verification\_status              Verified
+issue\_d                          Dec-2011
+loan\_status                    Fully Paid
+pymnt\_plan                              n
+purpose                       credit\_card
+title                            Computer
+zip\_code                            860xx
+addr\_state                             AZ
+dti                                 27.65
+delinq\_2yrs                             0
+earliest\_cr\_line                 Jan-1985
+inq\_last\_6mths                          1
+open\_acc                                3
+pub\_rec                                 0
+revol\_bal                           13648
+revol\_util                          83.7\%
+total\_acc                               9
+initial\_list\_status                     f
+out\_prncp                               0
+out\_prncp\_inv                           0
+total\_pymnt                       5863.16
+total\_pymnt\_inv                   5833.84
+total\_rec\_prncp                      5000
+total\_rec\_int                      863.16
+total\_rec\_late\_fee                      0
+recoveries                              0
+collection\_recovery\_fee                 0
+last\_pymnt\_d                     Jan-2015
+last\_pymnt\_amnt                    171.62
+last\_credit\_pull\_d               Nov-2016
+collections\_12\_mths\_ex\_med              0
+policy\_code                             1
+application\_type               INDIVIDUAL
+acc\_now\_delinq                          0
+chargeoff\_within\_12\_mths                0
+delinq\_amnt                             0
+pub\_rec\_bankruptcies                    0
+tax\_liens                               0
+Name: 0, dtype: object
+52
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/IPython/core/interactiveshell.py:2785: DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low\_memory=False.
+  interactivity=interactivity, compiler=compiler, result=result)
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{drop}\PY{p}{(}
+            \PY{p}{[}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{id}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{member\PYZus{}id}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{funded\PYZus{}amnt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{funded\PYZus{}amnt\PYZus{}inv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{grade}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sub\PYZus{}grade}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{emp\PYZus{}title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{issue\PYZus{}d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{zip\PYZus{}code}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{out\PYZus{}prncp}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{out\PYZus{}prncp\PYZus{}inv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}pymnt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}pymnt\PYZus{}inv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rec\PYZus{}prncp}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rec\PYZus{}int}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{total\PYZus{}rec\PYZus{}late\PYZus{}fee}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{recoveries}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{collection\PYZus{}recovery\PYZus{}fee}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{last\PYZus{}pymnt\PYZus{}d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{last\PYZus{}pymnt\PYZus{}amnt}\PY{l+s+s2}{\PYZdq{}}
+            \PY{p}{]}\PY{p}{,}
+            \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{loan\PYZus{}status}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Fully Paid                                             33902
+Charged Off                                             5658
+Does not meet the credit policy. Status:Fully Paid      1988
+Does not meet the credit policy. Status:Charged Off      761
+Current                                                  201
+Late (31-120 days)                                        10
+In Grace Period                                            9
+Late (16-30 days)                                          5
+Default                                                    1
+Name: loan\_status, dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{p}{[}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{loan\PYZus{}status}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Fully Paid}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+                                \PY{o}{|} \PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{loan\PYZus{}status}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Charged Off}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}
+        
+        \PY{n}{status\PYZus{}replace} \PY{o}{=} \PY{p}{\PYZob{}}
+            \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Fully Paid}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{,}
+                \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Charged Off}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{0}\PY{p}{,}
+            \PY{p}{\PYZcb{}}
+        \PY{p}{\PYZcb{}}
+        
+        \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{status\PYZus{}replace}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{}let\PYZsq{}s look for any columns that contain only one unique value and }
+        \PY{c+c1}{\PYZsh{} remove them}
+        
+        \PY{n}{orig\PYZus{}columns} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{columns}
+        \PY{n}{drop\PYZus{}columns} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+        \PY{k}{for} \PY{n}{col} \PY{o+ow}{in} \PY{n}{orig\PYZus{}columns}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{}drop nan first}
+            \PY{n}{col\PYZus{}series} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{p}{[}\PY{n}{col}\PY{p}{]}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{unique}\PY{p}{(}\PY{p}{)}
+            \PY{k}{if} \PY{n+nb}{len}\PY{p}{(}\PY{n}{col\PYZus{}series}\PY{p}{)} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:}
+                \PY{n}{drop\PYZus{}columns}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{col}\PY{p}{)}
+        \PY{n}{loans\PYZus{}2007} \PY{o}{=} \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{drop\PYZus{}columns}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{drop\PYZus{}columns}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+        \PY{n}{loans\PYZus{}2007}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/filtered\PYZus{}loans\PYZus{}2007.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+['initial\_list\_status', 'collections\_12\_mths\_ex\_med', 'policy\_code', 'application\_type', 'acc\_now\_delinq', 'chargeoff\_within\_12\_mths', 'delinq\_amnt', 'tax\_liens']
+(39560, 24)
+
+    \end{Verbatim}
+
+    \subsubsection{2. Data cleaning/ Data type
+converting}\label{data-cleaning-data-type-converting}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{c+c1}{\PYZsh{} dropped nan/useless column}
+        \PY{n}{loans} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/filtered\PYZus{}loans\PYZus{}2007.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{null\PYZus{}counts} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{isnull}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{null\PYZus{}counts}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+loan\_amnt                  0
+term                       0
+int\_rate                   0
+installment                0
+emp\_length              1073
+home\_ownership             0
+annual\_inc                 0
+verification\_status        0
+loan\_status                0
+pymnt\_plan                 0
+purpose                    0
+title                     11
+addr\_state                 0
+dti                        0
+delinq\_2yrs                0
+earliest\_cr\_line           0
+inq\_last\_6mths             0
+open\_acc                   0
+pub\_rec                    0
+revol\_bal                  0
+revol\_util                50
+total\_acc                  0
+last\_credit\_pull\_d         2
+pub\_rec\_bankruptcies     697
+dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pub\PYZus{}rec\PYZus{}bankruptcies}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+        \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans}\PY{o}{.}\PY{n}{dtypes}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+object     12
+float64    10
+int64       1
+dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{object\PYZus{}columns\PYZus{}df} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{select\PYZus{}dtypes}\PY{p}{(}\PY{n}{include}\PY{o}{=}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{object}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{object\PYZus{}columns\PYZus{}df}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+term                     36 months
+int\_rate                    10.65\%
+emp\_length               10+ years
+home\_ownership                RENT
+verification\_status       Verified
+pymnt\_plan                       n
+purpose                credit\_card
+title                     Computer
+addr\_state                      AZ
+earliest\_cr\_line          Jan-1985
+revol\_util                   83.7\%
+last\_credit\_pull\_d        Nov-2016
+Name: 0, dtype: object
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{cols} \PY{o}{=} \PY{p}{[}
+             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{home\PYZus{}ownership}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{verification\PYZus{}status}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{emp\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{term}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{addr\PYZus{}state}\PY{l+s+s1}{\PYZsq{}}
+         \PY{p}{]}
+         \PY{k}{for} \PY{n}{c} \PY{o+ow}{in} \PY{n}{cols}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{n}{c}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+RENT        18371
+MORTGAGE    17131
+OWN          2827
+OTHER          96
+NONE            3
+Name: home\_ownership, dtype: int64
+Not Verified       16436
+Verified           12251
+Source Verified     9741
+Name: verification\_status, dtype: int64
+10+ years    8821
+< 1 year     4563
+2 years      4371
+3 years      4074
+4 years      3409
+5 years      3270
+1 year       3227
+6 years      2212
+7 years      1756
+8 years      1472
+9 years      1253
+Name: emp\_length, dtype: int64
+ 36 months    28234
+ 60 months    10194
+Name: term, dtype: int64
+CA    6882
+NY    3684
+FL    2766
+TX    2659
+NJ    1814
+IL    1480
+PA    1470
+VA    1371
+GA    1352
+MA    1306
+OH    1177
+MD    1030
+AZ     828
+WA     800
+CO     764
+NC     754
+CT     728
+MI     688
+MO     658
+MN     589
+NV     477
+SC     462
+WI     439
+OR     431
+AL     429
+LA     425
+KY     321
+OK     292
+KS     258
+UT     251
+AR     233
+DC     211
+RI     196
+NM     182
+HI     168
+WV     167
+NH     162
+DE     110
+WY      79
+MT      78
+AK      77
+SD      62
+VT      54
+MS      19
+TN      17
+IN       9
+ID       6
+IA       5
+NE       5
+ME       3
+Name: addr\_state, dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{purpose}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{value\PYZus{}counts}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+debt\_consolidation    18137
+credit\_card            4970
+other                  3803
+home\_improvement       2869
+major\_purchase         2108
+small\_business         1771
+car                    1492
+wedding                 932
+medical                 667
+moving                  557
+house                   365
+vacation                350
+educational             312
+renewable\_energy         95
+Name: purpose, dtype: int64
+Debt Consolidation                        2128
+Debt Consolidation Loan                   1671
+Personal Loan                              640
+Consolidation                              503
+debt consolidation                         483
+Credit Card Consolidation                  348
+Home Improvement                           344
+Debt consolidation                         323
+Small Business Loan                        310
+Credit Card Loan                           302
+Personal                                   296
+Consolidation Loan                         254
+Home Improvement Loan                      237
+personal loan                              224
+personal                                   207
+Wedding Loan                               207
+Loan                                       206
+Car Loan                                   193
+consolidation                              193
+Other Loan                                 177
+Wedding                                    151
+Credit Card Payoff                         149
+Credit Card Refinance                      140
+Major Purchase Loan                        136
+Consolidate                                126
+Medical                                    114
+Credit Card                                112
+home improvement                           105
+Credit Cards                                93
+My Loan                                     92
+                                          {\ldots} 
+Loan Request will pay off                    1
+My vacation                                  1
+Pay Off Card Debt                            1
+My Consolidation 2010                        1
+Private car loan                             1
+sam loan for educ                            1
+House Downpayment                            1
+kitchen and front of house                   1
+Old college and recent moving expenses       1
+Buying into an existing business             1
+Loan for Start-up                            1
+New Custom Painting Business                 1
+7300                                         1
+pool liner                                   1
+gvmeaks                                      1
+House Project                                1
+Erika's CC debt consolidation                1
+marriage                                     1
+DG's loan                                    1
+prsonal loan                                 1
+Goodbye to Credit Cards \& High Rates         1
+Troy Personal Loan                           1
+House and Property Repair                    1
+Home Renovations                             1
+Bed Room set for my son                      1
+Goodbye Prosper, Hello Lending Club          1
+Used Motorcycle                              1
+Credit Card Re-Finance                       1
+Pay credit cards off                         1
+udi                                          1
+Name: title, Length: 19094, dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{mapping\PYZus{}dict} \PY{o}{=} \PY{p}{\PYZob{}}
+             \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{emp\PYZus{}length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{\PYZob{}}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{10+ years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{10}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{9 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{9}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{8 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{8}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{7 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{7}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{6 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{6}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{5 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{5}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{4 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{4}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{3 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{3}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{2 years}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{2}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{1 year}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{1}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZlt{} 1 year}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{0}\PY{p}{,}
+                 \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{n/a}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+m+mi}{0}
+             \PY{p}{\PYZcb{}}
+         \PY{p}{\PYZcb{}}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{last\PYZus{}credit\PYZus{}pull\PYZus{}d}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{earliest\PYZus{}cr\PYZus{}line}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{addr\PYZus{}state}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{title}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{int\PYZus{}rate}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{int\PYZus{}rate}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{rstrip}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{float}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{revol\PYZus{}util}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{revol\PYZus{}util}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{rstrip}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZpc{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{float}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{mapping\PYZus{}dict}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{cat\PYZus{}columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{home\PYZus{}ownership}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{verification\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{emp\PYZus{}length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{purpose}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{term}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{dummy\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{get\PYZus{}dummies}\PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{n}{cat\PYZus{}columns}\PY{p}{]}\PY{p}{)}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{loans}\PY{p}{,} \PY{n}{dummy\PYZus{}df}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{n}{cat\PYZus{}columns}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pymnt\PYZus{}plan}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{loans}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{./resources/cleaned\PYZus{}loans2007.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{index}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+    \subsubsection{Data analysis
+(Prediction)}\label{data-analysis-prediction}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+         \PY{n}{loans} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{./resources/cleaned\PYZus{}loans2007.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{loans}\PY{o}{.}\PY{n}{info}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 38428 entries, 0 to 38427
+Data columns (total 37 columns):
+loan\_amnt                              38428 non-null float64
+int\_rate                               38428 non-null float64
+installment                            38428 non-null float64
+annual\_inc                             38428 non-null float64
+loan\_status                            38428 non-null int64
+dti                                    38428 non-null float64
+delinq\_2yrs                            38428 non-null float64
+inq\_last\_6mths                         38428 non-null float64
+open\_acc                               38428 non-null float64
+pub\_rec                                38428 non-null float64
+revol\_bal                              38428 non-null float64
+revol\_util                             38428 non-null float64
+total\_acc                              38428 non-null float64
+home\_ownership\_MORTGAGE                38428 non-null int64
+home\_ownership\_NONE                    38428 non-null int64
+home\_ownership\_OTHER                   38428 non-null int64
+home\_ownership\_OWN                     38428 non-null int64
+home\_ownership\_RENT                    38428 non-null int64
+verification\_status\_Not Verified       38428 non-null int64
+verification\_status\_Source Verified    38428 non-null int64
+verification\_status\_Verified           38428 non-null int64
+purpose\_car                            38428 non-null int64
+purpose\_credit\_card                    38428 non-null int64
+purpose\_debt\_consolidation             38428 non-null int64
+purpose\_educational                    38428 non-null int64
+purpose\_home\_improvement               38428 non-null int64
+purpose\_house                          38428 non-null int64
+purpose\_major\_purchase                 38428 non-null int64
+purpose\_medical                        38428 non-null int64
+purpose\_moving                         38428 non-null int64
+purpose\_other                          38428 non-null int64
+purpose\_renewable\_energy               38428 non-null int64
+purpose\_small\_business                 38428 non-null int64
+purpose\_vacation                       38428 non-null int64
+purpose\_wedding                        38428 non-null int64
+term\_ 36 months                        38428 non-null int64
+term\_ 60 months                        38428 non-null int64
+dtypes: float64(12), int64(25)
+memory usage: 10.8 MB
+None
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
+         \PY{n}{lr} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{p}{)}
+         \PY{n}{cols} \PY{o}{=} \PY{n}{loans}\PY{o}{.}\PY{n}{columns}
+         \PY{n}{train\PYZus{}cols} \PY{o}{=} \PY{n}{cols}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{features} \PY{o}{=} \PY{n}{loans}\PY{p}{[}\PY{n}{train\PYZus{}cols}\PY{p}{]}
+         \PY{n}{target} \PY{o}{=} \PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         \PY{n}{lr}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{features}\PY{p}{,} \PY{n}{target}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{lr}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{features}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cross\PYZus{}validation} \PY{k}{import} \PY{n}{cross\PYZus{}val\PYZus{}predict}\PY{p}{,} \PY{n}{KFold}
+         \PY{n}{lr} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{p}{)}
+         \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{features}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}predict}\PY{p}{(}\PY{n}{lr}\PY{p}{,} \PY{n}{features}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kf}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{predictions}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False positives.}
+         \PY{n}{fp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{fp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True positives.}
+         \PY{n}{tp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{tp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False negatives.}
+         \PY{n}{fn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{fn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True negatives}
+         \PY{n}{tn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{tn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Rates}
+         \PY{n}{tpr} \PY{o}{=} \PY{n}{tp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{tp} \PY{o}{+} \PY{n}{fn}\PY{p}{)}\PY{p}{)}
+         \PY{n}{fpr} \PY{o}{=} \PY{n}{fp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{fp} \PY{o}{+} \PY{n}{tn}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{tpr}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{fpr}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{20}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/jkchang/anaconda3/lib/python3.6/site-packages/sklearn/cross\_validation.py:41: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model\_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.
+  "This module will be removed in 0.20.", DeprecationWarning)
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.9991519520247145
+0.997967104047311
+0     1
+1     1
+2     1
+3     1
+4     1
+5     1
+6     1
+7     1
+8     1
+9     1
+10    1
+11    1
+12    1
+13    1
+14    1
+15    1
+16    1
+17    1
+18    1
+19    1
+dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cross\PYZus{}validation} \PY{k}{import} \PY{n}{cross\PYZus{}val\PYZus{}predict}
+         \PY{n}{lr} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{balanced}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{features}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}predict}\PY{p}{(}\PY{n}{lr}\PY{p}{,} \PY{n}{features}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kf}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{predictions}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False positives.}
+         \PY{n}{fp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{fp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True positives.}
+         \PY{n}{tp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{tp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False negatives.}
+         \PY{n}{fn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{fn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True negatives}
+         \PY{n}{tn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{tn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Rates}
+         \PY{n}{tpr} \PY{o}{=} \PY{n}{tp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{tp} \PY{o}{+} \PY{n}{fn}\PY{p}{)}\PY{p}{)}
+         \PY{n}{fpr} \PY{o}{=} \PY{n}{fp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{fp} \PY{o}{+} \PY{n}{tn}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{tpr}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{fpr}\PY{p}{)}
+         \PY{n+nb}{print} \PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{20}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.66977617590938
+0.3984476067270375
+0     1
+1     0
+2     0
+3     1
+4     1
+5     0
+6     0
+7     0
+8     0
+9     0
+10    1
+11    0
+12    1
+13    1
+14    0
+15    0
+16    1
+17    1
+18    1
+19    0
+dtype: int64
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k}{import} \PY{n}{LogisticRegression}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cross\PYZus{}validation} \PY{k}{import} \PY{n}{cross\PYZus{}val\PYZus{}predict}
+         \PY{n}{penalty} \PY{o}{=} \PY{p}{\PYZob{}}
+             \PY{l+m+mi}{0}\PY{p}{:} \PY{l+m+mi}{5}\PY{p}{,}
+             \PY{l+m+mi}{1}\PY{p}{:} \PY{l+m+mi}{1}
+         \PY{p}{\PYZcb{}}
+         
+         \PY{n}{lr} \PY{o}{=} \PY{n}{LogisticRegression}\PY{p}{(}\PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{n}{penalty}\PY{p}{)}
+         \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{features}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}predict}\PY{p}{(}\PY{n}{lr}\PY{p}{,} \PY{n}{features}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kf}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{predictions}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False positives.}
+         \PY{n}{fp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{fp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True positives.}
+         \PY{n}{tp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{tp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False negatives.}
+         \PY{n}{fn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{fn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True negatives}
+         \PY{n}{tn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{tn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Rates}
+         \PY{n}{tpr} \PY{o}{=} \PY{n}{tp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{tp} \PY{o}{+} \PY{n}{fn}\PY{p}{)}\PY{p}{)}
+         \PY{n}{fpr} \PY{o}{=} \PY{n}{fp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{fp} \PY{o}{+} \PY{n}{tn}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{tpr}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{fpr}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.7268982645303934
+0.47384956569950104
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{ensemble} \PY{k}{import} \PY{n}{RandomForestClassifier}
+         \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{cross\PYZus{}validation} \PY{k}{import} \PY{n}{cross\PYZus{}val\PYZus{}predict}
+         \PY{n}{rf} \PY{o}{=} \PY{n}{RandomForestClassifier}\PY{p}{(}\PY{n}{n\PYZus{}estimators}\PY{o}{=}\PY{l+m+mi}{10}\PY{p}{,}\PY{n}{class\PYZus{}weight}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{balanced}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{c+c1}{\PYZsh{}print help(RandomForestClassifier)}
+         \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{features}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{cross\PYZus{}val\PYZus{}predict}\PY{p}{(}\PY{n}{rf}\PY{p}{,} \PY{n}{features}\PY{p}{,} \PY{n}{target}\PY{p}{,} \PY{n}{cv}\PY{o}{=}\PY{n}{kf}\PY{p}{)}
+         \PY{n}{predictions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{Series}\PY{p}{(}\PY{n}{predictions}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False positives.}
+         \PY{n}{fp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{fp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True positives.}
+         \PY{n}{tp\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{tp} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tp\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} False negatives.}
+         \PY{n}{fn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{fn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{fn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} True negatives}
+         \PY{n}{tn\PYZus{}filter} \PY{o}{=} \PY{p}{(}\PY{n}{predictions} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{loans}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{loan\PYZus{}status}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)}
+         \PY{n}{tn} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{predictions}\PY{p}{[}\PY{n}{tn\PYZus{}filter}\PY{p}{]}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Rates}
+         \PY{n}{tpr} \PY{o}{=} \PY{n}{tp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{tp} \PY{o}{+} \PY{n}{fn}\PY{p}{)}\PY{p}{)}
+         \PY{n}{fpr} \PY{o}{=} \PY{n}{fp} \PY{o}{/} \PY{n+nb}{float}\PY{p}{(}\PY{p}{(}\PY{n}{fp} \PY{o}{+} \PY{n}{tn}\PY{p}{)}\PY{p}{)}
+         
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{tpr}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{fpr}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+0.9744071236029924
+0.9414156348179634
+
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
