@@ -90,3 +90,6 @@ ENV/
 
 #Large file
 large file/
+
+#idea
+.idea/
