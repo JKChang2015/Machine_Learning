@@ -5,15 +5,16 @@
 # Description: Advance KNN
 
 import operator
+import os
 
-from numpy import *
+import numpy as np
 
 
 def kNNClassify(newInput, dataSet, labels, k):
     numSamples = dataSet.shape[0]  # shape[0] stands for the number of rows
 
     # Step 1: calculate Euclidean distance
-    diff = tile(newInput, (numSamples, 1)) - dataSet
+    diff = np.tile(newInput, (numSamples, 1)) - dataSet
     squareDiff = diff ** 2
     squareSum = squareDiff.sum(axis=1)
     distance = squareSum ** 0.5
@@ -36,41 +37,53 @@ def kNNClassify(newInput, dataSet, labels, k):
     sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
 
+def image2vector(filename):
+    with open(filename, 'r') as f:
+        vector_list = []
+        for line in f.readlines():
+            vector_list += list(line.strip())
+        vector_list = [[float(x) for x in vector_list]]
+    return np.asarray(vector_list)
 
 
+def loadDataSet(folderPath):
+    print('--- Getting data set from', folderPath, '---')
+    trainingFileList = os.listdir(folderPath)
+    numSamples = len(trainingFileList)
+
+    DataMatrix = np.zeros((1, 1024))
+    labels = []
+
+    for file in trainingFileList:
+        num_vector = image2vector(folderPath + file)
+        DataMatrix = np.r_[DataMatrix, num_vector]
+
+        labels.append(file.strip('_')[0])
+
+    DataMatrix = np.delete(DataMatrix, (0), axis=0)
+    return DataMatrix, labels
 
 
-def img2vector(filename):
-    rows = 32
-    cols = 32
-    imgVector = zeros((1, rows * cols))
-    fileIn = open(filename)
-    for row in range(rows):
-        lineStr = fileIn.readline()
-        for col in range(cols):
-            imgVector[0, row * 32 + col] = int(lineStr[col])
+def testData(folderPath, dataSet, labels, k):
+    print('--- Testing data set from', folderPath, '---')
+    testingFileList = os.listdir(folderPath)
+    numSamples = len(testingFileList)
 
-    return imgVector
+    matched_count = 0
 
-filename = '../resource/digits/testDigits/0_0.txt'
-res = img2vector(filename)
-print(type(res))
-print(res)
-print()
+    for file in testingFileList:
+        vector = image2vector(folderPath + file)
+        test_label = kNNClassify(vector, dataSet, labels, k)
+        real_label = file.strip('_')[0]
+        if test_label == real_label:
+            matched_count += 1
 
-# from numpy import loadtxt
-# lines = loadtxt(filename, comments="#", delimiter=" ", unpack=False)
-# print()
+    return matched_count / numSamples
 
-# def image2vector2(filename):
-#     with open(filename, 'r') as f:
-#         vector_list = []
-#         for line in f.readlines():
-#             vector_list += list(line.strip())
-#         print(len(vector_list))
-#
-#     return asarray(vector_list)
-#
-# vector = image2vector2(filename)
-# print(type(vector))
-# print()
+
+training_folderPath = '../resource/digits/trainingDigits/'
+testing_folderPath = '../resource/digits/testDigits/'
+dataset, labels = loadDataSet(training_folderPath)
+
+res = testData(testing_folderPath,dataset,labels, 3)
+print('The classify accuracy is: %.2f%%' % (res * 100))
