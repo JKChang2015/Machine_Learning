@@ -2,7 +2,7 @@
 # Created by JKChang
 # 28/01/2020, 10:56
 # Tag:
-# Description: Advance KNN
+# Description: Advance KNN： digit term recognition
 
 import operator
 import os
@@ -36,6 +36,7 @@ def kNNClassify(newInput, dataSet, labels, k):
     # Sort the dictionary according to the values
     sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
+
 
 def image2vector(filename):
     with open(filename, 'r') as f:
@@ -77,6 +78,8 @@ def testData(folderPath, dataSet, labels, k):
         real_label = file.strip('_')[0]
         if test_label == real_label:
             matched_count += 1
+        else:
+            print(file, ':', test_label)
 
     return matched_count / numSamples
 
@@ -85,5 +88,5 @@ training_folderPath = '../resource/digits/trainingDigits/'
 testing_folderPath = '../resource/digits/testDigits/'
 dataset, labels = loadDataSet(training_folderPath)
 
-res = testData(testing_folderPath,dataset,labels, 3)
+res = testData(testing_folderPath, dataset, labels, 3)
 print('The classify accuracy is: %.2f%%' % (res * 100))
