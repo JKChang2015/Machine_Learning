@@ -13,4 +13,6 @@ Chapter 1 Introduction
 3. Feature engineering (e.g. data normalisation, reduce dimension )
 4. Data Modelling 
 
-![-w1251](./15885422922068/15885426599916.jpg)
+![image](resources/1-1.jpg)
+
+![-w1209](media/15885436521869.jpg)
