@@ -15,4 +15,12 @@ Chapter 1 Introduction
 
 ![image](resources/1-1.jpg)
 
-![-w1209](media/15885436521869.jpg)
+## 3. Machine Learning classification
+* **Supervised learning:** X has corresponding tag Y. e.g. Data regression, classification
+
+* **Un-supervised learning:** X don't have corresponding tag Y. e.g. Clustering, Dimensionality reduction
+
+* **Reinforcement learning：** Reinforcement learning is an area of machine learning concerned with how software agents ought to take actions in an environment in order to maximise the notion of cumulative reward. 根据具体情况不断的尝试，从而达到最大输出。和前两者不同，该模型不需要大量的数据“喂养”，而是通过自己不停的尝试来学会某些技能。
+
+
+![image](resources/1-2.jpg)
