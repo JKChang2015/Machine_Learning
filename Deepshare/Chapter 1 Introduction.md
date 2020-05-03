@@ -24,3 +24,9 @@ Chapter 1 Introduction
 
 
 ![image](resources/1-2.jpg)
+
+## 4. Preliminary knowledge for machine learning
+* Advanced Mathematics
+* Linear Algebra 
+* Probability
+* Python
